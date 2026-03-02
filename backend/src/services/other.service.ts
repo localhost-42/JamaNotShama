@@ -1,7 +1,7 @@
-import { pool } from "../api/DBConnection";
-import { AppError } from "../errors/appError";
+import { pool } from "../api/DBConnection.js";
+import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
-import type { LogRow, UserRow } from "../util/types";
+import type { LogRow, UserRow } from "../util/types.js";
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -19,13 +19,35 @@ export const loginDB = async (id: number, name: string): Promise<UserRow> => {
     return r.rows[0]!;
   } catch (err) {
     if (isPgUniqueViolation(err)) {
-      return { user_id: id, name: name };
+      return { userId: id, name: name };
     }
     throw err;
   }
 };
 
 export const logsDB = async (): Promise<LogRow[]> => {
+  try {
+    const r: QueryResult<LogRow> = await pool.query(
+      "SELECT * FROM logs ORDER BY enter_time ASC",
+    );
+    return r.rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getListDB = async (): Promise<LogRow[]> => {
+  try {
+    const r: QueryResult<LogRow> = await pool.query(
+      "SELECT * FROM logs ORDER BY enter_time ASC",
+    );
+    return r.rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getQueueDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
       "SELECT * FROM logs ORDER BY enter_time ASC",

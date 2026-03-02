@@ -7,7 +7,7 @@ export default {
   users() {
     return {
       postUser: (id: number, name: string): Promise<AxiosResponse<void>> =>
-        axiosInstance.post(`/func/login`, { id, name }),
+        axiosInstance.post(`/login`, { id, name }),
     };
   },
   queue() {
