@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "private": "true",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "mocha --exit tests/*",
-    "start": "node server.js"
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "tsx watch src/server.ts"
   },
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
+    "@types/pg": "^8.18.0",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "mocha": "^10.2.0",
@@ -18,6 +23,8 @@
   },
   "dependencies": {
     "express": "^4.22.1",
+    "pg": "^8.19.0",
+    "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28"
   }
 }
