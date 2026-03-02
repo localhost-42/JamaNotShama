@@ -1,54 +1,101 @@
-import React, { useState, type FC } from 'react';
+import React, { useEffect, useState, type FC } from 'react';
 import { EnterQueueBtn } from '../EnterQueueButton/EnterQueueBtn';
 import { PeopleList } from '../PeopleList/PeopleList';
+import api from '../../api';
 
 export const Exit: FC = () => {
   const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
   const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
 
+
+  useEffect(() => {
+const fetchData = async () => {
+    api.list().getAll().then((response) => {
+      setWaitingQueue(response.data);
+    }).catch((error) => {
+      alert("Error fetching waiting list:" + error.message);
+    });
+
+    api.queue().getAll().then((response) => {
+      setPeopleOutside(response.data);
+    }).catch((error) => {
+      alert("Error fetching queue:" + error.message);
+    });
+};
+
+
+fetchData();
+  }, []);
+  
+
   const userName = localStorage.getItem('name') || 'Unknown User';
+  const userId = Number(localStorage.getItem('id')) || 0;
+
   const MAX_OUTSIDE = 5;
 
   const isDisabled = !waitingQueue.slice(0, MAX_OUTSIDE - peopleOutside.length)
                       .includes(userName) ? waitingQueue.includes(userName) : false
 
 
-  const leaveQueue = 
-    (setQueue: React.Dispatch<React.SetStateAction<string[]>>) =>
-     (name: string) => {
-        console.log('left');
-        
 
-        setQueue((prevQueue) => prevQueue.filter((person) => person !== name));
+
+     const leaveList = 
+    (name: string, userId: number) => {
+        api.list().exitList(userId).then(() => {
+            setWaitingQueue((prevQueue) => prevQueue.filter((person) => person !== name));
+        }).catch((error) => {
+            alert("Error leaving the list:" + error.message);
+        });
+     }
+
+     const leaveQueue = 
+    (name: string, userId: number) => {
+        api.queue().exitQueue(userId).then(() => {
+            setPeopleOutside((prevQueue) => prevQueue.filter((person) => person !== name));
+        }).catch((error) => {
+            alert("Error leaving the queue:" + error.message);
+        });
+     }
+     
+
+
+
+      const joinList = 
+     (name: string, userId: number) => {
+        api.list().enterList(userId, name).then(() => {
+            setWaitingQueue((prevQueue) => [...prevQueue, name]);
+        }).catch((error) => {
+            alert("Error joining the list:" + error.message);
+        });
+     }
+
+     const joinQueue = 
+     (name: string, userId: number) => {
+      api.queue().enterQueue(userId).then(() => {
+        setPeopleOutside((prevQueue) => [...prevQueue, name]);
+      }).catch((error) => {       
+         alert("Error joining the queue:" + error.message);
+      });  
      }
 
 
-    const joinQueue = 
-     (setQueue: React.Dispatch<React.SetStateAction<string[]>>) =>
-     (name: string) => {
-        console.log('joined');
-        
-        setQueue((prevQueue) => [...prevQueue, name]);
-     }
-
-     const changeQueue = (name: string) => {  
-        console.log('change');
+     const changeQueue = (name: string, userId: number) => {  
         
 
-          leaveQueue(setWaitingQueue)(name);
-            joinQueue(setPeopleOutside)(name);
+            leaveList(name, userId);
+            joinQueue(name, userId);
      }
 
     const handleMainBtnClick =
            peopleOutside.includes(userName) ?
-             leaveQueue(setPeopleOutside): 
+             leaveQueue: 
              (![...waitingQueue].splice(0, MAX_OUTSIDE - peopleOutside.length)
              .includes(userName) ? 
              (!(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE) ? 
-             joinQueue(setPeopleOutside) : joinQueue(setWaitingQueue)) :
+             joinQueue : joinList) :
               changeQueue);
    
-            const handleExitWaitingQueue =  leaveQueue(setWaitingQueue);
+            const handleExitWaitingQueue =  leaveList;
             
 
   return (
@@ -66,8 +113,7 @@ export const Exit: FC = () => {
             <EnterQueueBtn 
             className='btn btn-danger btn-lg'
             isDisabled={isDisabled}
-            userName={userName}
-            handleMainBtnClick={handleMainBtnClick} 
+            handleMainBtnClick={() => handleMainBtnClick(userName, userId)} 
             message={isDisabled ? "Queue is full" : "Join Queue"} />
           </div>
 
@@ -82,8 +128,7 @@ export const Exit: FC = () => {
             <EnterQueueBtn
             className='btn btn-secondary btn-sm align-self-end'
             isDisabled={!waitingQueue.includes(userName)}
-            userName={userName}
-            handleMainBtnClick={handleExitWaitingQueue}
+            handleMainBtnClick={() => handleExitWaitingQueue(userName, userId)}
             message="stop waiting" />
             </div>
         </div>
