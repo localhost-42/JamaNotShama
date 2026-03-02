@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api";
 import "./Login.css";
+import api from "../../api";
 
 // Login page collecting ID and name, authenticating via backend
 export default function Login() {
@@ -17,13 +17,13 @@ export default function Login() {
     setIsLoading(true);
 
     if (!id || !name) {
-      setError("Both ID and name are required");
+      setError("חובה להכניס שם ומספר חניך");
       setIsLoading(false);
       return;
     }
 
     try {
-      await api.convoys().postUser(parseInt(id), name);
+      await api.users().postUser(parseInt(id), name);
 
       // Save user info to localStorage
       localStorage.setItem("user", JSON.stringify({
@@ -54,10 +54,10 @@ export default function Login() {
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
-        <h1>Login</h1>
+        <h1>התחברות</h1>
         {error && <div className="error">{error}</div>}
         <label>
-          ID
+          מספר חניך
           <input
             type="number"
             value={id}
@@ -66,7 +66,7 @@ export default function Login() {
           />
         </label>
         <label>
-          Name
+          שם מלא
           <input
             type="text"
             value={name}

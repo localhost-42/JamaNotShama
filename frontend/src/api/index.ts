@@ -4,7 +4,7 @@ const axiosInstance = axios.create({
 });
 
 export default {
-  convoys() {
+  users() {
     return {
       postUser: (id: number, name: string): Promise<AxiosResponse<void>> =>
         axiosInstance.post(`/func/login`, { id, name }),
