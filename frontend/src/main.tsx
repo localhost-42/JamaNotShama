@@ -1,14 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-
-import { Exit } from './Components/Exit/Exit.tsx'
 import './index.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Exit />
-  </StrictMode>,
-)
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <main>
+        <RouterProvider router={router} />
+    </main>
+  </React.StrictMode>
+);
+

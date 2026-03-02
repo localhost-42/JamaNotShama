@@ -3,8 +3,8 @@ import { EnterQueueBtn } from '../EnterQueueButton/EnterQueueBtn';
 import { PeopleList } from '../PeopleList/PeopleList';
 
 export const Exit: FC = () => {
-  const [peopleOutside, setPeopleOutside] = useState<string[]>([ 'Sarah', 'name', 'name2', 'Mike']);
-  const [waitingQueue, setWaitingQueue] = useState<string[]>(['guy', 'Alice', 'Bob', 'generic student']);
+  const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
+  const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
 
   const userName = localStorage.getItem('name') || 'Unknown User';
   const MAX_OUTSIDE = 5;
