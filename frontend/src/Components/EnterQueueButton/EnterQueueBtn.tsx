@@ -3,21 +3,20 @@ import type { FC } from "react";
 
 interface ComponentsProps {
     isDisabled: boolean;
-    userName: string;
-    handleMainBtnClick: (userName: string) => void;
+    handleMainBtnClick: () => void;
     message: string;
     className?: string;
 }
 
 
-export const EnterQueueBtn: FC<ComponentsProps> = ({isDisabled, className, userName, handleMainBtnClick, message}) => {
+export const EnterQueueBtn: FC<ComponentsProps> = ({isDisabled, className, handleMainBtnClick, message}) => {
 
 
     return (
         
             <button 
             className={className}
-             onClick={() => handleMainBtnClick(userName)}
+             onClick={() => handleMainBtnClick}
                 disabled={ isDisabled }
              >
               {message}
