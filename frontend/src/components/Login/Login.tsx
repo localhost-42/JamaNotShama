@@ -23,13 +23,11 @@ export default function Login() {
     }
 
     try {
-      await api.users().postUser(parseInt(id), name);
+      //await api.users().postUser(parseInt(id), name);
 
       // Save user info to localStorage
-      localStorage.setItem("user", JSON.stringify({
-        id: parseInt(id),
-        name: name
-      }));
+      localStorage.setItem("name", name);
+      localStorage.setItem("id",id);
 
       // Clear form
       setId("");
@@ -47,8 +45,8 @@ export default function Login() {
 
   // redirect immediately if already signed in
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) navigate("/home");
+    const userName = localStorage.getItem("name");
+    if (userName) navigate("/home");
   }, [navigate]);
 
   return (
