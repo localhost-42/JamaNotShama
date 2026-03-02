@@ -1,7 +1,10 @@
 import type { FC } from "react";
+import { Exit } from "../Components/Exit/Exit";
 
 export const Home: FC = () => {
     return (
-        <div>Home Page</div>
+        <div>
+            <Exit />
+        </div>
     );
 };
