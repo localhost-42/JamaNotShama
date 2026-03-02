@@ -3,7 +3,7 @@ import { login, logs } from "../controllers/other.controller";
 
 const router = Router();
 
-router.get("/login", login);
-router.post("/logs", logs);
+router.post("/login", login);
+router.get("/logs", logs);
 
 export default router;

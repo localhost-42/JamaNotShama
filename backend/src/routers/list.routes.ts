@@ -8,9 +8,9 @@ import {
 
 const router = Router();
 
-router.get("/enter/:id/queue", enterQueue);
-router.get("/enter/:id/list", enterList);
-router.post("/exit/:id/queue", exitQueue);
-router.delete("/exit/:id/list", exitList);
+router.post("/enter/:id/queue", enterQueue);
+router.post("/enter/:id/list", enterList);
+router.delete("/exit/:id/queue", exitQueue);
+router.put("/exit/:id/list", exitList);
 
 export default router;
