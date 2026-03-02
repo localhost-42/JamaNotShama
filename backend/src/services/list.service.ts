@@ -1,5 +1,5 @@
-import { pool } from "../api/DBConnection";
-import { AppError } from "../errors/appError";
+import { pool } from "../api/DBConnection.js";
+import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
 
 function isPgUniqueViolation(err: unknown): boolean {
