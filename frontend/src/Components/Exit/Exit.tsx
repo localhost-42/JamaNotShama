@@ -11,22 +11,21 @@ export const Exit: FC = () => {
   useEffect(() => {
 const fetchData = async () => {
     api.list().getAll().then((response) => {
-      setWaitingQueue(response.data);
+      setWaitingQueue(Array.isArray(response.data) ? response.data : []);
     }).catch((error) => {
       alert("Error fetching waiting list:" + error.message);
     });
 
     api.queue().getAll().then((response) => {
-      setPeopleOutside(response.data);
+      setPeopleOutside(Array.isArray(response.data) ? response.data : []);
     }).catch((error) => {
       alert("Error fetching queue:" + error.message);
     });
 };
 
-
 fetchData();
   }, []);
-  
+
 
   const userName = localStorage.getItem('name') || 'Unknown User';
   const userId = Number(localStorage.getItem('id')) || 0;
@@ -72,7 +71,7 @@ fetchData();
      const joinQueue = 
      (name: string, userId: number) => {
       api.queue().enterQueue(userId).then(() => {
-        setPeopleOutside((prevQueue) => [...prevQueue, name]);
+        setPeopleOutside((prevQueue) => [...prevQueue, name ]);
       }).catch((error) => {       
          alert("Error joining the queue:" + error.message);
       });  
@@ -105,8 +104,7 @@ fetchData();
           <h2>Currently Outside ({peopleOutside.length}/{MAX_OUTSIDE})</h2>
           <PeopleList
           className='shadow p-3 mb-2 bg-body rounded list-group'
-           people={
-            [...peopleOutside, ...Array(MAX_OUTSIDE - peopleOutside.length).fill(null)]} />
+           people={Array.isArray(peopleOutside) ? [...peopleOutside, ...Array(MAX_OUTSIDE - peopleOutside.length).fill(null)] : []} />
         </div>
 
           <div className="d-flex w-100 align-items-center justify-content-center my-4">
@@ -137,7 +135,7 @@ fetchData();
                style={{ maxHeight: '250px', overflowY: 'auto' }}>
             <PeopleList
               className="list-group"
-              people={waitingQueue} />
+              people={Array.isArray(waitingQueue) ? waitingQueue : []} />
           </div>
           
 

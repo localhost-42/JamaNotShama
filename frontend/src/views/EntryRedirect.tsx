@@ -6,11 +6,11 @@ export function EntryRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const id = localStorage.getItem("id");
+    if (id) {
       navigate("/home", { replace: true });
     } else {
-      navigate("/func/login", { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [navigate]);
 

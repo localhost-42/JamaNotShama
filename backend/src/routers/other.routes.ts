@@ -5,7 +5,7 @@ const router = Router();
 
 router.post("/login", login);
 router.get("/logs", logs);
-router.get("/list", getList);
-router.get("/queue", getQueue);
+// router.get("/list", getList);
+// router.get("/queue", getQueue);
 
 export default router;
