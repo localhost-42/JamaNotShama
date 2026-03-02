@@ -28,7 +28,7 @@ export const loginDB = async (id: number, name: string): Promise<UserRow> => {
 export const logsDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
-      "SELECT * FROM logs ORDER BY enter_time ASC",
+      "SELECT * FROM list WHERE exit_time IS NOT NULL AND enter_time IS NOT NULL ORDER BY enter_time ASC",
     );
     return r.rows;
   } catch (err) {
