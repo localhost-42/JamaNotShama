@@ -23,7 +23,7 @@ export default function Login() {
     }
 
     try {
-      //await api.users().postUser(parseInt(id), name);
+      await api.users().postUser(parseInt(id), name);
 
       // Save user info to localStorage
       localStorage.setItem("name", name);
