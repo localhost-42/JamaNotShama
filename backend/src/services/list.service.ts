@@ -43,8 +43,8 @@ export const exitList = async (id: number): Promise<void> => {
 export const enterQueue = async (id: number): Promise<void> => {
   try {
    await pool.query<ListRow>(
-      "INSERT INTO queue(user_id, exit_time) VALUES ($1, $2)",
-      [id, null],
+      "INSERT INTO queue(user_id) VALUES ($1)",
+      [id]
     );
   } catch (err) {
     if (isPgUniqueViolation(err)) {

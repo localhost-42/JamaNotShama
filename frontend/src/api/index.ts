@@ -1,4 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
+import type { LogRow } from "../utils/types";
 const axiosInstance = axios.create({
   baseURL: "151.145.88.80:3000/",
 });
@@ -29,5 +30,11 @@ export default {
       getAll: (): Promise<AxiosResponse<string[]>> =>
         axiosInstance.get(`/list`),
     };
-  }
-};
+  },
+  logs()  {
+    return {
+      getAll: (): Promise<AxiosResponse<LogRow[]>> =>
+        axiosInstance.get(`/logs`),
+    };  
+},
+}
