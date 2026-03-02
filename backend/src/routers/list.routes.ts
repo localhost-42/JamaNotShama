@@ -4,7 +4,7 @@ import {
   exitQueue,
   enterList,
   exitList,
-} from "../controllers/list.controller";
+} from "../controllers/list.controller.js";
 
 const router = Router();
 
