@@ -4,7 +4,7 @@ import "./Login.css";
 import api from "../../api";
 
 // Login page collecting ID and name, authenticating via backend
-export default function Login() {
+export function Login() {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +27,7 @@ export default function Login() {
 
       // Save user info to localStorage
       localStorage.setItem("name", name);
-      localStorage.setItem("id",id);
+      localStorage.setItem("id", id);
 
       // Clear form
       setId("");
@@ -36,7 +36,10 @@ export default function Login() {
       // redirect to home after success
       navigate("/home");
     } catch (err: any) {
-      setError(err.response?.data?.error || "An error occurred. Make sure the server is running.");
+      setError(
+        err.response?.data?.error ||
+          "An error occurred. Make sure the server is running.",
+      );
       console.error(err);
     } finally {
       setIsLoading(false);

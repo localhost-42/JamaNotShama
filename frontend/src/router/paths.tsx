@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import Login from "../Components/Login";
+import { Login } from "../Components/Login";
 import { Home } from "../views/Home";
 import Layout from "../views/Layout";
 import { EntryRedirect } from "../views/EntryRedirect";
@@ -23,7 +23,7 @@ export const routes: Page[] = [
     element: <Login />,
     name: "התחברות",
     isShown: true,
-  }
+  },
 ];
 
 export const paths = [
@@ -36,6 +36,6 @@ export const paths = [
         path: route.path,
         element: route.element,
       })),
-    ]
+    ],
   },
 ];
