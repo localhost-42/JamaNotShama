@@ -1,16 +1,20 @@
 import { Router } from "express";
 import {
-  enterQueue,
-  exitQueue,
-  enterList,
-  exitList,
+  enterQueueHandler,
+  exitQueueHandler,
+  enterListHandler,
+  exitListHandler,
+  getListHandler,
+  getQueueHandler,
 } from "../controllers/list.controller.js";
 
 const router = Router();
 
-router.post("/enter/:id/queue", enterQueue);
-router.post("/enter/:id/list", enterList);
-router.delete("/exit/:id/queue", exitQueue);
-router.put("/exit/:id/list", exitList);
+router.post("/enter/:id/queue", enterQueueHandler);
+router.post("/enter/:id/list", enterListHandler);
+router.delete("/exit/:id/queue", exitQueueHandler);
+router.put("/exit/:id/list", exitListHandler);
+router.get("/queue", getQueueHandler);
+router.get("/list", getListHandler);
 
 export default router;
