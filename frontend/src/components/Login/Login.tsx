@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import api from "../../api";
 
 // Login page collecting ID and name, authenticating via backend
-export function Login() {
+export const Login: FC = () => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -81,4 +81,4 @@ export function Login() {
       </form>
     </div>
   );
-}
+};
