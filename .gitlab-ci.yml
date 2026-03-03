@@ -115,7 +115,7 @@ deploy:prod:
 
       echo "==> run new container"
       docker run -d \
-        --name jns-app \
+        --name jns-app --network jns-net \
         --restart unless-stopped \
         -p 3000:"$APP_PORT" \
         -e NODE_ENV=production \
