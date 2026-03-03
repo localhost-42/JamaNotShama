@@ -3,7 +3,6 @@ import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
 import type { ExcelReportRow, LogRow, UserRow } from "../util/types.js";
 
-
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
   return (
@@ -14,7 +13,7 @@ function isPgUniqueViolation(err: unknown): boolean {
 export const loginDB = async (id: number, name: string): Promise<UserRow> => {
   try {
     const r = await pool.query<UserRow>(
-      "INSERT INTO users(id, name) VALUES ($1, $2) RETURNING user_id, name",
+      "INSERT INTO jns.users(id, name) VALUES ($1, $2) RETURNING user_id, name",
       [id, name.trim()],
     );
     return r.rows[0]!;
@@ -34,8 +33,8 @@ export const excelDB = async (): Promise<ExcelReportRow[]> => {
     l.return_time::timestamp::time,
     u.name,
     l.exit_time::timestamp::date as date
-    FROM list l
-    JOIN users u ON u.id = l.user_id
+    FROM jns.list l
+    JOIN jns.users u ON u.id = l.user_id
     `);
 
     return result.rows;
@@ -44,11 +43,10 @@ export const excelDB = async (): Promise<ExcelReportRow[]> => {
   }
 };
 
-
 export const logsDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
-      "SELECT * FROM list WHERE exit_time IS NOT NULL AND enter_time IS NOT NULL ORDER BY enter_time ASC",
+      "SELECT * FROM jns.list WHERE exit_time IS NOT NULL AND enter_time IS NOT NULL ORDER BY enter_time ASC",
     );
     return r.rows;
   } catch (err) {
@@ -56,11 +54,10 @@ export const logsDB = async (): Promise<LogRow[]> => {
   }
 };
 
-
 export const getListDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
-      "SELECT * FROM logs ORDER BY enter_time ASC",
+      "SELECT * FROM jns.list ORDER BY enter_time ASC",
     );
     return r.rows;
   } catch (err) {
@@ -71,7 +68,7 @@ export const getListDB = async (): Promise<LogRow[]> => {
 export const getQueueDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
-      "SELECT * FROM logs ORDER BY enter_time ASC",
+      "SELECT * FROM jns.queue ORDER BY enter_time ASC",
     );
     return r.rows;
   } catch (err) {
