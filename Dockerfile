@@ -1,9 +1,11 @@
-FROM node:21-alpine
-WORKDIR ./jns
+FROM node:20-alpine
+WORKDIR /jns
 
-COPY backend/package*.json ./
-RUN npm ci
+COPY backend/package*.json ./backend/
+RUN cd backend && npm ci
 
-COPY backend/ ./
+COPY backend/ ./backend/
+RUN cd backend && npm run build
+
 EXPOSE 3000
-CMD ["npm","run","start"]
+CMD ["sh","-lc","cd backend && npm run start"]

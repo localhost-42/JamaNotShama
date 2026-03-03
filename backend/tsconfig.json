@@ -1,11 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "strict": true,
+    "skipLibCheck": true,
+
+    "types": ["node"],
+    "verbatimModuleSyntax": true,
+
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  }
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false
+  },
+  "include": ["src/**/*.ts"]
 }
