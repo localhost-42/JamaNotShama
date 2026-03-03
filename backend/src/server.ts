@@ -1,16 +1,24 @@
 import express from "express";
+import path from "node:path";
 import listRouter from "./routers/list.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
-
 const port = process.env.PORT || 3000;
 
-app.use("/", listRouter);
+app.use("/api", listRouter);
+
+const publicDir = path.join(process.cwd(), "public");
+app.use(express.static(publicDir));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
+
 app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log("Listening on port " + port);
 });
 
-module.exports = app;
+export default app;

@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import type { ExcelReportRow, LogRow } from "../utils/types";
 const axiosInstance = axios.create({
-  baseURL: "151.145.88.80:3000/",
+  baseURL: "151.145.88.80:3000/api",
 });
 
 export default {
@@ -31,16 +31,16 @@ export default {
         axiosInstance.get(`/list`),
     };
   },
-  logs()  {
+  logs() {
     return {
       getAll: (): Promise<AxiosResponse<LogRow[]>> =>
         axiosInstance.get(`/logs`),
-    };  
-},
-excel() {
-  return {
-    get: (): Promise<AxiosResponse<ExcelReportRow[]>> => 
-     axiosInstance.get('/excel'),
-  };
-},
-}
+    };
+  },
+  excel() {
+    return {
+      get: (): Promise<AxiosResponse<ExcelReportRow[]>> =>
+        axiosInstance.get("/excel"),
+    };
+  },
+};
