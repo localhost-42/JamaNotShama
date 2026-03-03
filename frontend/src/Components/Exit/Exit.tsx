@@ -1,38 +1,14 @@
-import { useEffect, useState, type FC } from "react";
-import { EnterQueueBtn } from "../EnterQueueButton/EnterQueueBtn";
-import { PeopleList } from "../PeopleList/PeopleList";
+import { type FC } from "react";
 import api from "../../api";
+import { useGetLists, useGetQueue } from "../../api/hooks";
+import { EnterQueueBtn } from "../EnterQueueButton/index";
+import { PeopleList } from "../PeopleList/index";
 
 export const Exit: FC = () => {
-  const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
-  const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
+  const {peopleOutside, setPeopleOutside} = useGetQueue();
+  const {waitingQueue, setWaitingQueue} = useGetLists();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      api
-        .list()
-        .getAll()
-        .then((response) => {
-          setWaitingQueue(Array.isArray(response.data) ? response.data : []);
-        })
-        .catch((error) => {
-          alert("Error fetching waiting list:" + error.message);
-        });
-
-      api
-        .queue()
-        .getAll()
-        .then((response) => {
-          setPeopleOutside(Array.isArray(response.data) ? response.data : []);
-        })
-        .catch((error) => {
-          alert("Error fetching queue:" + error.message);
-        });
-    };
-
-    fetchData();
-  }, []);
-
+  
   const userName = localStorage.getItem("name") || "Unknown User";
   const userId = Number(localStorage.getItem("id")) || 0;
 

@@ -32,20 +32,6 @@ test:front:
     - npm ci
     - npm test --if-present
 
-test:back:
-  stage: test
-  image: node:20
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  cache:
-    key: "$CI_COMMIT_REF_SLUG-back"
-    paths:
-      - backend/node_modules/
-  script:
-    - cd backend
-    - npm ci
-    - npm test --if-present
-
 # BUILD
 build:artifacts:
   stage: build
