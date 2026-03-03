@@ -1,12 +1,12 @@
 import type { FC } from "react";
-import { Exit } from "../Components/Exit/Exit";
-import { Statistics } from "../Components/Statistics/Statistics";
+import { Exit } from "../components/Exit/Exit";
+import { Statistics } from "../components/Statistics/Statistics";
 
 export const Home: FC = () => {
-    return (
-        <div>
-            <Statistics />
-            <Exit />
-        </div>
-    );
+  return (
+    <div>
+      <Statistics />
+      <Exit />
+    </div>
+  );
 };
