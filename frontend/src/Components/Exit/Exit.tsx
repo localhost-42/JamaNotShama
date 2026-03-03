@@ -1,8 +1,8 @@
 import { type FC } from "react";
-import { EnterQueueBtn } from "../EnterQueueButton/EnterQueueBtn";
-import { PeopleList } from "../PeopleList/PeopleList";
 import api from "../../api";
 import { useGetLists, useGetQueue } from "../../api/hooks";
+import { EnterQueueBtn } from "../EnterQueueButton/index";
+import { PeopleList } from "../PeopleList/index";
 
 export const Exit: FC = () => {
   const {peopleOutside, setPeopleOutside} = useGetQueue();
