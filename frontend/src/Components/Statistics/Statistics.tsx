@@ -1,24 +1,14 @@
-import { useEffect, useState, type FC } from "react";
-import api from "../../api";
+import { useState, type FC } from "react";
+
 import type { LogRow } from "../../utils/types";
+import { useGetLogs } from "../../api/hooks";
 
 
 export const Statistics: FC = () => {
-    const [logs, setLogs] = useState<LogRow[]>([]);
+    const {logs} = useGetLogs();
     const [openDay, setOpenDay] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchLogs = async () => {
-            api.logs().getAll().then((logs) => {
-                setLogs(Array.isArray(logs.data) ? logs.data : []);
-            }).catch((error: Error) => {
-                alert("Error fetching logs:" + error.message);
-            });
-        }
-
-        fetchLogs();
-
-    }, []);
+    
 
     const formatDate = (date: Date | string) => {
         const d = new Date(date);
