@@ -91,7 +91,7 @@ export const Exit: FC = () => {
 
   return (
     <div
-      className="exit position-fixed end-0 top-50 translate-middle-y"
+      className="exit "
       style={{ maxHeight: "90vh" }}
     >
       <div className="container d-flex flex-column align-items-center justify-content-center h-auto">
@@ -131,7 +131,7 @@ export const Exit: FC = () => {
               mb-2"
           >
             <EnterQueueBtn
-              className="btn btn-secondary btn-sm align-self-end"
+              className="btn btn-secondary btn-sm"
               isDisabled={!waitingQueue.includes(userName)}
               handleMainBtnClick={() =>
                 handleExitWaitingQueue(userName, userId)
