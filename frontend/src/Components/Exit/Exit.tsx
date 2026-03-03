@@ -1,145 +1,180 @@
-import { useEffect, useState, type FC } from 'react';
-import { EnterQueueBtn } from '../EnterQueueButton/EnterQueueBtn';
-import { PeopleList } from '../PeopleList/PeopleList';
-import api from '../../api';
+import { useEffect, useState, type FC } from "react";
+import { EnterQueueBtn } from "../EnterQueueButton/EnterQueueBtn";
+import { PeopleList } from "../PeopleList/PeopleList";
+import api from "../../api";
 
 export const Exit: FC = () => {
   const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
   const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
 
-
   useEffect(() => {
-const fetchData = async () => {
-    api.list().getAll().then((response) => {
-      setWaitingQueue(Array.isArray(response.data) ? response.data : []);
-    }).catch((error) => {
-      alert("Error fetching waiting list:" + error.message);
-    });
+    const fetchData = async () => {
+      api
+        .list()
+        .getAll()
+        .then((response) => {
+          setWaitingQueue(Array.isArray(response.data) ? response.data : []);
+        })
+        .catch((error) => {
+          alert("Error fetching waiting list:" + error.message);
+        });
 
-    api.queue().getAll().then((response) => {
-      setPeopleOutside(Array.isArray(response.data) ? response.data : []);
-    }).catch((error) => {
-      alert("Error fetching queue:" + error.message);
-    });
-};
+      api
+        .queue()
+        .getAll()
+        .then((response) => {
+          setPeopleOutside(Array.isArray(response.data) ? response.data : []);
+        })
+        .catch((error) => {
+          alert("Error fetching queue:" + error.message);
+        });
+    };
 
-fetchData();
+    fetchData();
   }, []);
 
-
-  const userName = localStorage.getItem('name') || 'Unknown User';
-  const userId = Number(localStorage.getItem('id')) || 0;
+  const userName = localStorage.getItem("name") || "Unknown User";
+  const userId = Number(localStorage.getItem("id")) || 0;
 
   const MAX_OUTSIDE = 5;
 
-  const isDisabled = !waitingQueue.slice(0, MAX_OUTSIDE - peopleOutside.length)
-                      .includes(userName) ? waitingQueue.includes(userName) : false
+  const isDisabled = !waitingQueue
+    .slice(0, MAX_OUTSIDE - peopleOutside.length)
+    .includes(userName)
+    ? waitingQueue.includes(userName)
+    : false;
 
+  const leaveList = (name: string, userId: number) => {
+    api
+      .list()
+      .exitList(userId)
+      .then(() => {
+        setWaitingQueue((prevQueue) =>
+          prevQueue.filter((person) => person !== name),
+        );
+      })
+      .catch((error) => {
+        alert("Error leaving the list:" + error.message);
+      });
+  };
 
+  const leaveQueue = (name: string, userId: number) => {
+    api
+      .queue()
+      .exitQueue(userId)
+      .then(() => {
+        setPeopleOutside((prevQueue) =>
+          prevQueue.filter((person) => person !== name),
+        );
+      })
+      .catch((error) => {
+        alert("Error leaving the queue:" + error.message);
+      });
+  };
 
+  const joinList = (name: string, userId: number) => {
+    api
+      .list()
+      .enterList(userId, name)
+      .then(() => {
+        setWaitingQueue((prevQueue) => [...prevQueue, name]);
+      })
+      .catch((error) => {
+        alert("Error joining the list:" + error.message);
+      });
+  };
 
-     const leaveList = 
-    (name: string, userId: number) => {
-        api.list().exitList(userId).then(() => {
-            setWaitingQueue((prevQueue) => prevQueue.filter((person) => person !== name));
-        }).catch((error) => {
-            alert("Error leaving the list:" + error.message);
-        });
-     }
+  const joinQueue = (name: string, userId: number) => {
+    api
+      .queue()
+      .enterQueue(userId)
+      .then(() => {
+        setPeopleOutside((prevQueue) => [...prevQueue, name]);
+      })
+      .catch((error) => {
+        alert("Error joining the queue:" + error.message);
+      });
+  };
 
-     const leaveQueue = 
-    (name: string, userId: number) => {
-        api.queue().exitQueue(userId).then(() => {
-            setPeopleOutside((prevQueue) => prevQueue.filter((person) => person !== name));
-        }).catch((error) => {
-            alert("Error leaving the queue:" + error.message);
-        });
-     }
-     
+  const changeQueue = (name: string, userId: number) => {
+    leaveList(name, userId);
+    joinQueue(name, userId);
+  };
 
+  const handleMainBtnClick = peopleOutside.includes(userName)
+    ? leaveQueue
+    : ![...waitingQueue]
+          .splice(0, MAX_OUTSIDE - peopleOutside.length)
+          .includes(userName)
+      ? !(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE)
+        ? joinQueue
+        : joinList
+      : changeQueue;
 
-
-      const joinList = 
-     (name: string, userId: number) => {
-        api.list().enterList(userId, name).then(() => {
-            setWaitingQueue((prevQueue) => [...prevQueue, name]);
-        }).catch((error) => {
-            alert("Error joining the list:" + error.message);
-        });
-     }
-
-     const joinQueue = 
-     (name: string, userId: number) => {
-      api.queue().enterQueue(userId).then(() => {
-        setPeopleOutside((prevQueue) => [...prevQueue, name ]);
-      }).catch((error) => {       
-         alert("Error joining the queue:" + error.message);
-      });  
-     }
-
-
-     const changeQueue = (name: string, userId: number) => {  
-        
-
-            leaveList(name, userId);
-            joinQueue(name, userId);
-     }
-
-    const handleMainBtnClick =
-           peopleOutside.includes(userName) ?
-             leaveQueue: 
-             (![...waitingQueue].splice(0, MAX_OUTSIDE - peopleOutside.length)
-             .includes(userName) ? 
-             (!(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE) ? 
-             joinQueue : joinList) :
-              changeQueue);
-   
-            const handleExitWaitingQueue =  leaveList;
-            
+  const handleExitWaitingQueue = leaveList;
 
   return (
-    <div className="exit position-fixed end-0 top-50 translate-middle-y" style={{ maxHeight: '90vh' }}>
+    <div
+      className="exit position-fixed end-0 top-50 translate-middle-y"
+      style={{ maxHeight: "90vh" }}
+    >
       <div className="container d-flex flex-column align-items-center justify-content-center h-auto">
         <div className="outside-section">
-          <h2>Currently Outside ({peopleOutside.length}/{MAX_OUTSIDE})</h2>
+          <h2>
+            Currently Outside ({peopleOutside.length}/{MAX_OUTSIDE})
+          </h2>
           <PeopleList
-          className='shadow p-3 mb-2 bg-body rounded list-group'
-           people={Array.isArray(peopleOutside) ? [...peopleOutside, ...Array(MAX_OUTSIDE - peopleOutside.length).fill(null)] : []} />
+            className="shadow p-3 mb-2 bg-body rounded list-group"
+            people={
+              Array.isArray(peopleOutside)
+                ? [
+                    ...peopleOutside,
+                    ...Array(MAX_OUTSIDE - peopleOutside.length).fill(null),
+                  ]
+                : []
+            }
+          />
         </div>
 
-          <div className="d-flex w-100 align-items-center justify-content-center my-4">
-            <EnterQueueBtn 
-            className='btn btn-danger btn-lg'
+        <div className="d-flex w-100 align-items-center justify-content-center my-4">
+          <EnterQueueBtn
+            className="btn btn-danger btn-lg"
             isDisabled={isDisabled}
-            handleMainBtnClick={() => handleMainBtnClick(userName, userId)} 
-            message={isDisabled ? "Queue is full" : "Join Queue"} />
-          </div>
+            handleMainBtnClick={() => handleMainBtnClick(userName, userId)}
+            message={isDisabled ? "Queue is full" : "Join Queue"}
+          />
+        </div>
 
         <div className="waiting-section">
-            <h2>Waiting Queue</h2>
-            
-             <div className="d-flex
+          <h2>Waiting Queue</h2>
+
+          <div
+            className="d-flex
               align-items-center
               justify-content-end
-              mb-2">
-            
+              mb-2"
+          >
             <EnterQueueBtn
-            className='btn btn-secondary btn-sm align-self-end'
-            isDisabled={!waitingQueue.includes(userName)}
-            handleMainBtnClick={() => handleExitWaitingQueue(userName, userId)}
-            message="stop waiting" />
-            </div>
-        </div>
-        
-          <div className="shadow p-2 mb-2 bg-body rounded w-100"
-               style={{ maxHeight: '250px', overflowY: 'auto' }}>
-            <PeopleList
-              className="list-group"
-              people={Array.isArray(waitingQueue) ? waitingQueue : []} />
+              className="btn btn-secondary btn-sm align-self-end"
+              isDisabled={!waitingQueue.includes(userName)}
+              handleMainBtnClick={() =>
+                handleExitWaitingQueue(userName, userId)
+              }
+              message="stop waiting"
+            />
           </div>
-          
+        </div>
 
+        <div
+          className="shadow p-2 mb-2 bg-body rounded w-100"
+          style={{ maxHeight: "250px", overflowY: "auto" }}
+        >
+          <PeopleList
+            className="list-group"
+            people={Array.isArray(waitingQueue) ? waitingQueue : []}
+          />
+        </div>
       </div>
     </div>
   );
-}
+};
