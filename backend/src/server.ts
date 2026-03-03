@@ -6,6 +6,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(express.json());
 app.use("/api", listRouter);
 
 const publicDir = path.join(process.cwd(), "public");
