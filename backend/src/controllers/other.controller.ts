@@ -6,7 +6,7 @@ excelDB,
 } from "../services/other.service.js";
 import ExcelJS from "exceljs";
 
-import type { LogRow, UserRow } from "../util/types.js";
+import type { ExcelReportRow, LogRow, UserRow } from "../util/types.js";
 
 export const login = async (req: Request, res: Response) => {
   const {
@@ -27,20 +27,11 @@ export const logs = async (req: Request, res: Response) => {
 export const excelHandler = async (req: Request, res: Response) => {
   try{
 
-    const workbook: ExcelJS.Workbook = await excelDB();
+    const excelReportRow: ExcelReportRow[] = await excelDB();
     
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+   res.status(200).json(excelReportRow);
     
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=report.xlsx"
-    );
-    
-    await workbook.xlsx.write(res);
-    res.end()
+ 
   } catch (err: unknown) {
 
     if(err instanceof Error){

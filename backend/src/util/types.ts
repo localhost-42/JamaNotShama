@@ -11,7 +11,7 @@ export interface ExcelReportRow {
   name: string;
   exit_time: Date | string;
   return_time: Date | string;
-  current_date: Date | string;
+  date: Date | string;
 }
 
 export type UserRow = {

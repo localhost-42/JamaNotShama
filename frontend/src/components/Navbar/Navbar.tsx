@@ -10,32 +10,36 @@ export const Navbar: FC = () => {
     return (
         <div>
         {selectedUser && 
-      <nav style={{borderColor: "black", backgroundColor: "hsl(0, 77%, 28%)"}} className="navbar mb-5 navbar-expand-lg navbar-light navbar-background">
-        <h2 className="navbar-brand">
-          {`Shama | ${selectedUser}`}
-        </h2>
+      <nav style={{borderColor: "black", backgroundColor: "hsl(0, 77%, 28%)"}} className="navbar mb-4 navbar-expand-lg navbar-light navbar-background">
+        <div className="container-fluid">
+                  <span className="navbar-brand mb-0 h1">
+                  {`Shama | ${selectedUser}`}
+                  </span>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <div className="d-flex " id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             {routes.map((page) => ( page.path !== "/login" &&
-              (<li className="nav-item" key={page.path}>
+              (<li className="nav-item h5" key={page.path}>
                 <NavLink
                   to={page.path}
                   style={({ isActive }) => ({
-                    textDecoration: isActive ? "underline" : "none",
-                  })}
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? "active" : ""}`
-                  }
+                      textDecoration: isActive ? "underline" : "none",
+                    })}
+                    className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                }
                 >
-                  {page.name}
+               
+                    {page.name}
+                    
                 </NavLink>
               </li>)
+              
             ))}
           </ul>
-          <div className="btn-group">
-            
-          </div>
+          
+         
+            </div>
         </div>
       </nav>
     }
