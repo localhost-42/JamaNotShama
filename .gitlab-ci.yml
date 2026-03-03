@@ -84,9 +84,8 @@ push:image:
   needs: ["build:artifacts"]
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    - docker build -f backend/Dockerfile -t "$IMAGE_NAME:$IMAGE_TAG" -t "$IMAGE_NAME:latest" .
+    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
     - docker push "$IMAGE_NAME:$IMAGE_TAG"
-    - docker push "$IMAGE_NAME:latest"
 
 # DEPLOY
 deploy:prod:
@@ -109,10 +108,10 @@ deploy:prod:
 
         echo '$CI_REGISTRY_PASSWORD' | docker login -u '$CI_REGISTRY_USER' --password-stdin '$CI_REGISTRY'
 
-        docker pull '$IMAGE_NAME:latest'
+        docker pull '$IMAGE_NAME:$IMAGE_TAG'
 
-        docker stop app || true
-        docker rm app || true
+        docker stop jns-app || true
+        docker rm jns-app || true
 
         docker run -d --name jns-app --restart unless-stopped -p 3000:'$APP_PORT' -e NODE_ENV=production '$IMAGE_NAME:latest'
 
