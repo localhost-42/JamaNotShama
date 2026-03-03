@@ -1,7 +1,8 @@
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
-import type { LogRow, UserRow } from "../util/types.js";
+import type { ExcelReportRow, LogRow, UserRow } from "../util/types.js";
+
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -25,6 +26,25 @@ export const loginDB = async (id: number, name: string): Promise<UserRow> => {
   }
 };
 
+export const excelDB = async (): Promise<ExcelReportRow[]> => {
+  try {
+    const result = await pool.query<ExcelReportRow>(`
+    SELECT 
+    l.exit_time::timestamp::time,
+    l.return_time::timestamp::time,
+    u.name,
+    l.exit_time::timestamp::date as date
+    FROM list l
+    JOIN users u ON u.id = l.user_id
+    `);
+
+    return result.rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
 export const logsDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
@@ -35,6 +55,7 @@ export const logsDB = async (): Promise<LogRow[]> => {
     throw err;
   }
 };
+
 
 export const getListDB = async (): Promise<LogRow[]> => {
   try {

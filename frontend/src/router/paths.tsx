@@ -3,6 +3,7 @@ import { Login } from "../components/Login";
 import { Home } from "../views/Home";
 import Layout from "../views/Layout";
 import { EntryRedirect } from "../views/EntryRedirect";
+import { ExcelPage } from "../views/Excel";
 
 export interface Page {
   path: string;
@@ -22,6 +23,12 @@ export const routes: Page[] = [
     path: "/login",
     element: <Login />,
     name: "התחברות",
+    isShown: true,
+  },
+  {
+    path: "/excel",
+    element: <ExcelPage />,
+    name: "אקסל",
     isShown: true,
   },
 ];

@@ -24,8 +24,8 @@ export const Statistics: FC = () => {
     });
 
     return (
-        <div className="container mt-4">
-            <h1 className="mb-4">Statistics</h1>
+        <div className="container mt-3">
+            <h1 className="mb-3">Statistics</h1>
             {Object.keys(logsByDay).length === 0 && (
                 <div className="alert alert-secondary">No logs available</div>
             )}
