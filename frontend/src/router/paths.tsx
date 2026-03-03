@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Login } from "../components/Login";
+import { Login } from "../Components/Login";
 import { Home } from "../views/Home";
 import Layout from "../views/Layout";
 import { EntryRedirect } from "../views/EntryRedirect";
