@@ -1,5 +1,5 @@
 FROM node:21-alpine
-WORKDIR /usr/src/app
+WORKDIR ./jns
 
 COPY backend/package*.json ./
 RUN npm ci
