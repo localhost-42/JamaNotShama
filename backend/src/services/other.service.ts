@@ -14,7 +14,7 @@ function isPgUniqueViolation(err: unknown): boolean {
 export const loginDB = async (id: number, name: string): Promise<UserRow> => {
   try {
     const r = await pool.query<UserRow>(
-      "INSERT INTO users(user_id, name) VALUES ($1, $2) RETURNING user_id, name",
+      "INSERT INTO users(id, name) VALUES ($1, $2) RETURNING user_id, name",
       [id, name.trim()],
     );
     return r.rows[0]!;
