@@ -1,9 +1,11 @@
 import { type FC } from "react";
 import { Outlet } from "react-router-dom";
+import { Navbar } from "../components/Navbar/index";
 
 const Layout: FC = () => {
     return (
         <>
+            <Navbar />
             <Outlet />
         </>
     );

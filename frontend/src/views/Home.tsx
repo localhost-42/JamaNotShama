@@ -4,9 +4,15 @@ import { Statistics } from "../components/Statistics";
 
 export const Home: FC = () => {
   return (
-    <div>
-      <Statistics />
+ 
+    <div className="d-flex mb-3 justify-content-between">
+      <div className="column">
+      <Statistics />            
+      </div>
+      <div className="column">
       <Exit />
+      </div>
     </div>
+ 
   );
 };

@@ -1,4 +1,3 @@
-import "./index.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
@@ -10,7 +9,7 @@ import { router } from "./router";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <main>
+    <main className="">
       <RouterProvider router={router} />
     </main>
   </React.StrictMode>,
