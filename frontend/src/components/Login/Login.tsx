@@ -2,9 +2,10 @@ import { useState, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import api from "../../api";
+import axios from "axios";
 
 // Login page collecting ID and name, authenticating via backend
-const Login: FC = () => {
+export const Login: FC = () => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -35,11 +36,14 @@ const Login: FC = () => {
 
       // redirect to home after success
       navigate("/home");
-    } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
-          "An error occurred. Make sure the server is running.",
-      );
+    } catch (err: unknown) {
+      let msg = "An error occurred. Maybe you are an idiot.";
+
+      if (axios.isAxiosError(err)) {
+        msg = err.response?.data?.error || err.message || msg;
+      }
+
+      setError(msg);
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -82,5 +86,3 @@ const Login: FC = () => {
     </div>
   );
 };
-
-export default Login;
