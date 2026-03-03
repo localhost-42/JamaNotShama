@@ -22,6 +22,7 @@ export const Login: FC = () => {
       setIsLoading(false);
       return;
     }
+    
 
     try {
       await api.users().postUser(parseInt(id), name);
