@@ -1,5 +1,5 @@
 import { type FC } from "react";
-;
+
 import { useExcelConverter } from "./hooks/useExcelConverter";
 
 
