@@ -37,4 +37,10 @@ export default {
         axiosInstance.get(`/logs`),
     };  
 },
+excel() {
+  return {
+    get: (): Promise<AxiosResponse<Blob>> => 
+     axiosInstance.get('/excel',{ responseType: "blob"}),
+  };
+}
 }

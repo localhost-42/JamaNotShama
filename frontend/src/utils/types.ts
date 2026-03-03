@@ -4,3 +4,5 @@ export interface LogRow {
   enterTime: Date;
   exitTime: Date;
 }
+
+

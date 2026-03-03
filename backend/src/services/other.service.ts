@@ -1,7 +1,8 @@
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
-import type { LogRow, UserRow } from "../util/types.js";
+import type { ExcelReportRow, LogRow, UserRow } from "../util/types.js";
+import ExcelJS from "exceljs";
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -25,6 +26,25 @@ export const loginDB = async (id: number, name: string): Promise<UserRow> => {
   }
 };
 
+export const excelDB = async (): Promise<ExcelJS.Workbook> => {
+  try {
+    const result = await pool.query<ExcelReportRow>(`
+    SELECT 
+    l.exit_time,
+    l.return_time,
+    u.name,
+    CURRENT_DATE as current_date
+  FROM list l
+  JOIN users u ON u.id = l.user_id
+  `);
+
+    return makeExcel(result.rows);
+  } catch (err) {
+    throw err;
+  }
+};
+
+
 export const logsDB = async (): Promise<LogRow[]> => {
   try {
     const r: QueryResult<LogRow> = await pool.query(
@@ -35,6 +55,34 @@ export const logsDB = async (): Promise<LogRow[]> => {
     throw err;
   }
 };
+
+const makeExcel = async (result: ExcelReportRow[]) => {
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Report");
+
+
+    worksheet.columns = [
+      { header: "שם", key: "name", width: 25 },
+      { header: "תאריך", key: "current_date", width: 20 },
+      { header: "זמן יציאה", key: "exit_time", width: 20 },
+      { header: "זמן חזרה", key: "return_time", width: 20 },
+    ];
+
+  
+    worksheet.addRows(result);
+
+
+    worksheet.getColumn("exit_time").numFmt = "yyyy-mm-dd hh:mm";
+    worksheet.getColumn("return_time").numFmt = "yyyy-mm-dd hh:mm";
+    worksheet.getColumn("current_date").numFmt = "yyyy-mm-dd";
+
+
+    worksheet.getRow(1).font = { bold: true };
+
+
+    return workbook
+}
 
 export const getListDB = async (): Promise<LogRow[]> => {
   try {
