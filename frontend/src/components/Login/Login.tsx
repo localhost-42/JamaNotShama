@@ -4,7 +4,7 @@ import "./Login.css";
 import api from "../../api";
 
 // Login page collecting ID and name, authenticating via backend
-export const Login: FC = () => {
+const Login: FC = () => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -82,3 +82,5 @@ export const Login: FC = () => {
     </div>
   );
 };
+
+export default Login;
