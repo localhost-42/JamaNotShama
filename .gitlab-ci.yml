@@ -81,47 +81,59 @@ deploy:prod:
     - if: '$CI_COMMIT_BRANCH == "master"'
   needs: ["push:image"]
   script:
-    - set -euxo pipefail
+    # בלי -x כדי לא להדליף מפתחות/סיסמאות
+    - set -euo pipefail
+
     - apk add --no-cache openssh-client
-    - echo "SERVER_IP=[$SERVER_IP] SERVER_PORT=[$SERVER_PORT] SERVER_USER=[$SERVER_USER]"
+
+    - echo "SERVER_IP=[$SERVER_IP] SSH_PORT=[$SERVER_PORT] SERVER_USER=[$SERVER_USER] APP_PORT=[$APP_PORT] PUBLIC_PORT=[3000]"
     - test -n "${SERVER_IP:-}" || (echo "Missing SERVER_IP" && exit 1)
-    - test -n "${SERVER_PORT:-}" || (echo "Missing SERVER_PORT" && exit 1)
+    - test -n "${SERVER_PORT:-}" || (echo "Missing SERVER_PORT (SSH port, usually 22)" && exit 1)
+    - test -n "${SERVER_USER:-}" || (echo "Missing SERVER_USER" && exit 1)
     - test -n "${SSH_PRIVATE_KEY:-}" || (echo "Missing SSH_PRIVATE_KEY" && exit 1)
 
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
 
-    # לא נתקעים פה: timeout + לוגים
-    - echo "==> ssh-keyscan..."
-    - ssh-keyscan -T 10 -p "$SERVER_PORT" "$SERVER_IP" | tee -a ~/.ssh/known_hosts
+    - echo "==> ssh-keyscan (timeout 10s)..."
+    - ssh-keyscan -T 10 -p "$SERVER_PORT" "$SERVER_IP" >> ~/.ssh/known_hosts
 
     - echo "==> SSH connectivity test..."
     - ssh -o BatchMode=yes -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" "echo connected && docker --version"
 
-    - echo "==> Deploying image $IMAGE_NAME:$IMAGE_TAG ..."
+    - echo "==> Deploying $IMAGE_NAME:$IMAGE_TAG ..."
     - |
-      ssh -tt -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" << 'EOSSH'
-      set -euxo pipefail
-      echo "==> docker login"
-      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+      ssh -o BatchMode=yes -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" \
+      "CI_REGISTRY='$CI_REGISTRY' \
+       CI_REGISTRY_USER='$CI_REGISTRY_USER' \
+       CI_REGISTRY_PASSWORD='$CI_REGISTRY_PASSWORD' \
+       IMAGE_NAME='$IMAGE_NAME' \
+       IMAGE_TAG='$IMAGE_TAG' \
+       APP_PORT='$APP_PORT' \
+       PUBLIC_PORT='3000' \
+       bash -lc '
+         set -euo pipefail
 
-      echo "==> docker pull"
-      docker pull "$IMAGE_NAME:$IMAGE_TAG"
+         echo \"==> docker login\"
+         echo \"\$CI_REGISTRY_PASSWORD\" | docker login -u \"\$CI_REGISTRY_USER\" --password-stdin \"\$CI_REGISTRY\"
 
-      echo "==> stop/remove old container (if exists)"
-      docker stop jns-app || true
-      docker rm jns-app || true
+         echo \"==> docker pull\"
+         docker pull \"\$IMAGE_NAME:\$IMAGE_TAG\"
 
-      echo "==> run new container"
-      docker run -d \
-        --name jns-app --network jns-net \
-        --restart unless-stopped \
-        -p 3000:"$APP_PORT" \
-        -e NODE_ENV=production \
-        "$IMAGE_NAME:$IMAGE_TAG"
+         echo \"==> stop/remove old container\"
+         docker stop jns-app || true
+         docker rm jns-app || true
 
-      echo "==> show status"
-      docker ps --filter "name=jns-app"
-      docker logs --tail 80 jns-app || true
-      EOSSH
+         echo \"==> run new container\"
+         docker run -d \
+           --name jns-app --network jns-net \
+           --restart unless-stopped \
+           -p \"\$PUBLIC_PORT:\$APP_PORT\" \
+           -e NODE_ENV=production \
+           \"\$IMAGE_NAME:\$IMAGE_TAG\"
+
+         echo \"==> status + last logs\"
+         docker ps --filter name=jns-app
+         docker logs --tail 120 jns-app || true
+       '"
