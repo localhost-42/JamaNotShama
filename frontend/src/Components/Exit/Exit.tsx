@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { EnterQueueBtn } from '../EnterQueueButton/EnterQueueBtn';
 import { PeopleList } from '../PeopleList/PeopleList';
 import api from '../../api';
