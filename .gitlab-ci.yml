@@ -1,0 +1,120 @@
+stages:
+  - test
+  - build
+  - push
+  - deploy
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - when: never
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  SERVER_USER: "ubuntu"
+  APP_PORT: "5000"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE/app"
+  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+
+# TEST
+test:front:
+  stage: test
+  image: node:20
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-front"
+    paths:
+      - frontend/node_modules/
+  script:
+    - cd frontend
+    - npm ci
+    - npm test --if-present
+
+test:back:
+  stage: test
+  image: node:20
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-back"
+    paths:
+      - backend/node_modules/
+  script:
+    - cd backend
+    - npm ci
+    - npm test --if-present
+
+# BUILD
+build:artifacts:
+  stage: build
+  image: node:20
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-build"
+    paths:
+      - frontend/node_modules/
+      - backend/node_modules/
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+    - cd ../backend
+    - npm ci
+    - npm run build
+    - cd ..
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - frontend/dist/
+      - frontend/build/
+      - backend/dist/
+
+# PUSH (build docker image)
+push:image:
+  stage: push
+  image: docker:27
+  services:
+    - name: docker:27-dind
+      command: ["--mtu=1460"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  needs: ["build:artifacts"]
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - docker build -f backend/Dockerfile -t "$IMAGE_NAME:$IMAGE_TAG" -t "$IMAGE_NAME:latest" .
+    - docker push "$IMAGE_NAME:$IMAGE_TAG"
+    - docker push "$IMAGE_NAME:latest"
+
+# DEPLOY
+deploy:prod:
+  stage: deploy
+  image: alpine:3.20
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  needs: ["push:image"]
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -p "$SERVER_PORT" "$SERVER_IP" >> ~/.ssh/known_hosts
+  script:
+    - |
+      ssh -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" "
+        set -e
+
+        echo '$CI_REGISTRY_PASSWORD' | docker login -u '$CI_REGISTRY_USER' --password-stdin '$CI_REGISTRY'
+
+        docker pull '$IMAGE_NAME:latest'
+
+        docker stop app || true
+        docker rm app || true
+
+        docker run -d --name jns-app --restart unless-stopped -p 3000:'$APP_PORT' -e NODE_ENV=production '$IMAGE_NAME:latest'
+
+        docker image prune -f || true
+      "
