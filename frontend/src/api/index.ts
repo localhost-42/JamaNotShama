@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import type { ExcelReportRow, LogRow } from "../utils/types";
 const axiosInstance = axios.create({
-  baseURL: "151.145.88.80:3000/api",
+  baseURL: "/api",
 });
 
 export default {
