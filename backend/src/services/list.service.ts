@@ -80,7 +80,7 @@ export const getList = async (): Promise<string[]> => {
 export const getQueue = async (): Promise<string[]> => {
   try {
     const r = await pool.query<ListRow & UserRow>(
-      "SELECT u.name FROM jns.queue q JOIN jns.users u ON q.user_id = u.id WHERE q.exit_time IS NULL ORDER BY q.enter_time ASC",
+      "SELECT u.name FROM jns.queue q JOIN jns.users u ON q.user_id = u.id ORDER BY q.enter_time ASC",
     );
     return r.rows.map((row) => row.name);
   } catch (err) {
