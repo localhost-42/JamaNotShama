@@ -1,13 +1,13 @@
 {
   "name": "demo",
   "version": "0.0.0",
-  "private": "true",
-  "main": "server.js",
+  "private": true,
   "type": "module",
   "scripts": {
     "test": "mocha --exit tests/*",
+    "clean": "rm -rf dist",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "build": "tsc",
     "dev": "tsx watch src/server.ts"
   },
   "license": "MIT",
