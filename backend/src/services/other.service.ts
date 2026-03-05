@@ -29,10 +29,10 @@ export const excelDB = async (): Promise<ExcelReportRow[]> => {
   try {
     const result = await pool.query<ExcelReportRow>(`
     SELECT 
+    l.enter_time::timestamp::time,
     l.exit_time::timestamp::time,
-    l.return_time::timestamp::time,
     u.name,
-    l.exit_time::timestamp::date as date
+    l.enter_time::timestamp::date as date
     FROM jns.list l
     JOIN jns.users u ON u.id = l.user_id
     `);
