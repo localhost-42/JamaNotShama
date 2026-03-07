@@ -128,7 +128,7 @@ deploy:prod:
          docker run -d \
            --name jns-app --network jns-net \
            --restart unless-stopped \
-           -p \"\$PUBLIC_PORT:\$APP_PORT\" \
+           -p 127.0.0.1:\$PUBLIC_PORT:\$APP_PORT \
            -e NODE_ENV=production \
            \"\$IMAGE_NAME:\$IMAGE_TAG\"
 
