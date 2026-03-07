@@ -53,6 +53,8 @@ export const Exit: FC = () => {
       .list()
       .enterList(userId, name)
       .then(() => {
+        console.log(name);
+        
         setWaitingQueue((prevQueue) => [...prevQueue, name]);
       })
       .catch((error) => {
