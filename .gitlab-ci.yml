@@ -13,7 +13,6 @@ workflow:
 variables:
   DOCKER_TLS_CERTDIR: ""
   SERVER_USER: "ubuntu"
-  APP_PORT: "5000"
   IMAGE_NAME: "$CI_REGISTRY_IMAGE/app"
   IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
 
