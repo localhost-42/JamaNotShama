@@ -1,7 +1,7 @@
 export interface LogRow {
   name: string;
-  exit_time: string;
   enter_time: string;
+  exit_time: string;
   date: Date | string;
 }
 
