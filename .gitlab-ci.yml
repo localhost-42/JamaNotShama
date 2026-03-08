@@ -105,13 +105,6 @@ deploy:prod:
     - echo "==> Deploying $IMAGE_NAME:$IMAGE_TAG ..."
     - |
       ssh -o BatchMode=yes -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" \
-      "CI_REGISTRY='$CI_REGISTRY' \
-       CI_REGISTRY_USER='$CI_REGISTRY_USER' \
-       CI_REGISTRY_PASSWORD='$CI_REGISTRY_PASSWORD' \
-       IMAGE_NAME='$IMAGE_NAME' \
-       IMAGE_TAG='$IMAGE_TAG' \
-       APP_PORT='$APP_PORT' \
-       PUBLIC_PORT='3000' \
        bash -lc '
          set -euo pipefail
 
@@ -127,9 +120,9 @@ deploy:prod:
 
          echo \"==> run new container\"
          docker run -d \
-           --name jns-app --network jns-net \
+           --name jns-app --network \$DOCKER_NETWORK \
            --restart unless-stopped \
-           -p 127.0.0.1:\$PUBLIC_PORT:\$APP_PORT \
+           -p 127.0.0.1:\$APP_PORT:\$APP_PORT \
            -e NODE_ENV=production \
            \"\$IMAGE_NAME:\$IMAGE_TAG\"
 
