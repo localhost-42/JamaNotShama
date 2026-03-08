@@ -8,6 +8,7 @@ import {
 export const enterQueueHandler = async (req: Request, res: Response) => {
   try{
     await enterQueue(Number(req.params.id));
+
     res.status(200).send("Successfully entered queue"); 
   } catch (err) {
     res.status(400).send(err);  
@@ -17,6 +18,7 @@ export const enterQueueHandler = async (req: Request, res: Response) => {
 export const exitQueueHandler = async (req: Request, res: Response) => {
   try{
     await exitQueue(Number(req.params.id));
+    
     res.status(200).send("Successfully exited queue");
   } catch (err) {
     res.status(400).send(err);  

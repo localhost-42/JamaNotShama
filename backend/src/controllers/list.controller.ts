@@ -41,15 +41,15 @@ export const logs = async (req: Request, res: Response) => {
   try{
     const logs: LogRow[] = await getLogs();
 
-     return res.status(200).json(logs);
+   res.status(200).json(logs);
   } catch (err: unknown) {
 
     if(err instanceof Error){
 
-      return res.status(500).json({ message: `error ${err.message} cause: ${err.cause}`});
+      res.status(500).json({ message: `error ${err.message} cause: ${err.cause}`});
     }
 
-    return res.status(500).send("idek");
+    res.status(500).send("idek");
   }
 };
 

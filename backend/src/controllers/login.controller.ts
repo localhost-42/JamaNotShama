@@ -13,6 +13,6 @@ export const login = async (req: Request, res: Response) => {
 
   const user: UserRow = await loginDB(id, name);
 
-  return res.status(200).json(user);
+   res.status(200).json(user);
 };
 
