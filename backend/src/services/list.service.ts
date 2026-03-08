@@ -2,6 +2,7 @@ import type { QueryResult } from "typeorm";
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
 import type { ListRow, LogRow, nameRow, UserRow } from "../util/types.js";
+import { io } from "../server.js";
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -16,6 +17,8 @@ export const enterList = async (id: number): Promise<void> => {
       "INSERT INTO jns.list(user_id, enter_time) VALUES ($1, NOW())",
       [id],
     );
+
+    io.emit("listUpdated");
   } catch (err) {
     if (isPgUniqueViolation(err)) {
       throw new AppError("User is already in the list", 400);
@@ -30,6 +33,8 @@ export const exitList = async (id: number): Promise<void> => {
       "UPDATE jns.list SET exit_time = NOW() WHERE user_id = $1 AND exit_time IS NULL",
       [id],
     );
+
+    io.emit("listUpdated");
   } catch (err) {
     if (isPgUniqueViolation(err)) {
       throw new AppError("User is already out of the list", 400);
@@ -38,10 +43,6 @@ export const exitList = async (id: number): Promise<void> => {
     throw err;
   }
 };
-
-
-
-
 
 export const getList = async (): Promise<nameRow[]> => {
   try {
@@ -57,7 +58,6 @@ export const getList = async (): Promise<nameRow[]> => {
   }
 };
 
-
 export const getLogs = async (): Promise<LogRow[]> => {
   try {
     const r = await pool.query<LogRow>(
@@ -72,7 +72,7 @@ export const getLogs = async (): Promise<LogRow[]> => {
     l.enter_time IS NOT NULL;`,
     );
 
-    return r.rows
+    return r.rows;
   } catch (err) {
     throw err;
   }

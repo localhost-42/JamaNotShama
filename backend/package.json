@@ -30,6 +30,7 @@
     "express": "^4.22.1",
     "pg": "^8.19.0",
     "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.8.3",
     "typeorm": "^0.3.28"
   }
 }
