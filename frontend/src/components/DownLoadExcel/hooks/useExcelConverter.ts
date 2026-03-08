@@ -1,63 +1,73 @@
 import ExcelJS from "exceljs";
-
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { saveAs } from "file-saver";
 import type { LogRow } from "../../../utils/types";
 
-
-
-
 export const useExcelConverter = () => {
-    const [excelInfo, setExcelInfo] = useState<Blob | null>(null);
-    const [loading, setLoading] = useState(false);
-    
-    useEffect(() => {
+  const [excelInfo, setExcelInfo] = useState<Blob | null>(null);
+  const [loading, setLoading] = useState(false);
 
-        const makeExcel = async () => {
-            const uncheckedRes =
-            (await api.logs().getAll()).data 
+  useEffect(() => {
+    const makeExcel = async () => {
+      try {
+        const res = await api.logs().getAll();
+        const uncheckedRes: LogRow[] = res.data ?? [];
 
-            const result: LogRow[] = uncheckedRes.length === 0 ? uncheckedRes :
-       [{
-        name: '',
-        exit_time: '',
-        enter_time:'',
-        date: '',
-      }];
+        const result: LogRow[] =
+          uncheckedRes.length === 0
+            ? [
+                {
+                  name: "",
+                  exit_time: "",
+                  enter_time: "",
+                  date: "",
+                },
+              ]
+            : uncheckedRes;
 
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Report");
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Report");
 
-      worksheet.columns = [
-        { header: "שם", key: "name", width: 25 },
-        { header: "תאריך", key: "date", width: 20 },
-        { header: "זמן יציאה", key: "enter_time", width: 20 },
-        { header: "זמן חזרה", key: "exit_time", width: 20 },
-      ];
+        worksheet.columns = [
+          { header: "שם", key: "name", width: 25 },
+          { header: "תאריך", key: "date", width: 20 },
+          { header: "זמן יציאה", key: "enter_time", width: 20 },
+          { header: "זמן חזרה", key: "exit_time", width: 20 },
+        ];
 
-      worksheet.addRows(result);
+        const formattedRows = result.map((row) => ({
+          name: row.name,
+          date: row.date ? new Date(row.date) : "",
+          enter_time: row.enter_time ? new Date(row.enter_time) : "",
+          exit_time: row.exit_time ? new Date(row.exit_time) : "",
+        }));
 
-      worksheet.getColumn("exit_time").numFmt = "hh:mm";
-      worksheet.getColumn("enter_time").numFmt = "hh:mm";
-      worksheet.getColumn("date").numFmt = "yyyy-mm-dd";
+        worksheet.addRows(formattedRows);
 
-      worksheet.getRow(1).eachCell((cell) => {
-        cell.fill = {
-          type: "pattern",
-          pattern: "solid",
-          fgColor: { argb: "FFC0C0C0" },
-        };
-        cell.font = { bold: true };
-      });
+        worksheet.getColumn("enter_time").numFmt = "hh:mm";
+        worksheet.getColumn("exit_time").numFmt = "hh:mm";
+        worksheet.getColumn("date").numFmt = "yyyy-mm-dd";
 
-      const buffer = await workbook.xlsx.writeBuffer();
+        worksheet.getRow(1).eachCell((cell) => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FFC0C0C0" },
+          };
+          cell.font = { bold: true };
+        });
 
-      setExcelInfo(
-        new Blob([buffer], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        })
-      );
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        setExcelInfo(
+          new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          })
+        );
+      } catch (error) {
+        console.error("Excel generation failed:", error);
+      }
     };
 
     makeExcel();
