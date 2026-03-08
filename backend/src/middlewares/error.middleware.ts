@@ -7,7 +7,7 @@ export function errorMiddleware(
   res: Response,
   _next: NextFunction,
 ) {
-  // AppError מותאם
+
   if (err instanceof AppError) {
     return res.status(err.status).json({
       success: false,
