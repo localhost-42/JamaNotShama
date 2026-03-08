@@ -12,7 +12,7 @@ function isPgUniqueViolation(err: unknown): boolean {
 export const enterList = async (id: number): Promise<void> => {
   try {
     await pool.query<ListRow>(
-      "INSERT INTO jns.list(user_id, exit_time) VALUES ($1, $2)",
+      "INSERT INTO jns.list(user_id, me) VALUES ($1, $2)",
       [id, null],
     );
   } catch (err) {

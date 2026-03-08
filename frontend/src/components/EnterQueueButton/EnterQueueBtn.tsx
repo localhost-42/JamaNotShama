@@ -16,7 +16,7 @@ export const EnterQueueBtn: FC<ComponentsProps> = ({isDisabled, className, handl
         
             <button 
             className={className}
-             onClick={() => handleMainBtnClick}
+             onClick={ handleMainBtnClick}
                 disabled={ isDisabled }
              >
               {message}

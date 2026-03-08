@@ -5,8 +5,9 @@ import { EnterQueueBtn } from "../EnterQueueButton/index";
 import { PeopleList } from "../PeopleList/index";
 
 export const Exit: FC = () => {
-  const {peopleOutside, setPeopleOutside} = useGetQueue();
-  const {waitingQueue, setWaitingQueue} = useGetLists();
+  const {peopleOutside, setPeopleOutside} = useGetLists();
+  const {waitingQueue, setWaitingQueue} =  useGetQueue();
+
 
   
   const userName = localStorage.getItem("name") || "Unknown User";
@@ -20,76 +21,70 @@ export const Exit: FC = () => {
     ? waitingQueue.includes(userName)
     : false;
 
-  const leaveList = (name: string, userId: number) => {
+  const leaveWaitingQueue = (name: string, userId: number) => {
     api
-      .list()
-      .exitList(userId)
-      .then(() => {
-        setWaitingQueue((prevQueue) =>
-          prevQueue.filter((person) => person !== name),
-        );
-      })
-      .catch((error) => {
-        alert("Error leaving the list:" + error.message);
-      });
-  };
-
-  const leaveQueue = (name: string, userId: number) => {
-    api
-      .queue()
-      .exitQueue(userId)
-      .then(() => {
-        setPeopleOutside((prevQueue) =>
-          prevQueue.filter((person) => person !== name),
-        );
+    .queue()
+    .exitQueue(userId)
+    .then(() => {
+        setWaitingQueue((prevQueue) =>prevQueue.filter((person) => person !== name));
       })
       .catch((error) => {
         alert("Error leaving the queue:" + error.message);
       });
   };
 
-  const joinList = (name: string, userId: number) => {
+  const returnInside = (name: string, userId: number) => {
     api
-      .list()
-      .enterList(userId, name)
-      .then(() => {
-        console.log(name);
-        
+    .list()
+    .exitList(userId)
+    .then(() => {
+        setPeopleOutside((prevQueue) => prevQueue.filter((person) => person !== name));
+      })
+      .catch((error) => {
+        alert("Error leaving the list:" + error.message);
+      });
+  };
+
+  const joinWaitingQueue = (name: string, userId: number) => {
+    api
+    .queue()
+    .enterQueue(userId)  
+    .then(() => {
         setWaitingQueue((prevQueue) => [...prevQueue, name]);
+      })
+      .catch((error) => {
+        alert("Error joining the waiting queue:" + error.message);
+      });
+  };
+
+  const goOutside = (name: string, userId: number) => {
+    api
+    .list()
+    .enterList(userId, name)
+    .then(() => {
+        setPeopleOutside((prevQueue) => [...prevQueue, name]);
       })
       .catch((error) => {
         alert("Error joining the list:" + error.message);
       });
   };
 
-  const joinQueue = (name: string, userId: number) => {
-    api
-      .queue()
-      .enterQueue(userId)
-      .then(() => {
-        setPeopleOutside((prevQueue) => [...prevQueue, name]);
-      })
-      .catch((error) => {
-        alert("Error joining the queue:" + error.message);
-      });
-  };
-
   const changeQueue = (name: string, userId: number) => {
-    leaveList(name, userId);
-    joinQueue(name, userId);
+    leaveWaitingQueue(name, userId);
+    goOutside(name, userId);
   };
 
   const handleMainBtnClick = peopleOutside.includes(userName)
-    ? leaveQueue
+    ? returnInside
     : ![...waitingQueue]
           .splice(0, MAX_OUTSIDE - peopleOutside.length)
           .includes(userName)
-      ? !(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE)
-        ? joinQueue
-        : joinList
+      ? (!(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE)
+        ?  goOutside
+        : joinWaitingQueue)
       : changeQueue;
 
-  const handleExitWaitingQueue = leaveList;
+  const handleExitWaitingQueue = leaveWaitingQueue;
 
   return (
     <div
@@ -104,12 +99,12 @@ export const Exit: FC = () => {
           <PeopleList
             className="shadow p-3 mb-2 bg-body rounded list-group"
             people={
-              Array.isArray(peopleOutside)
-                ? [
+             Array.isArray(peopleOutside) ?
+                 [
                     ...peopleOutside,
                     ...Array(MAX_OUTSIDE - peopleOutside.length).fill(null),
-                  ]
-                : []
+                  ]: []
+              
             }
           />
         </div>
@@ -119,7 +114,7 @@ export const Exit: FC = () => {
             className="btn btn-danger btn-lg"
             isDisabled={isDisabled}
             handleMainBtnClick={() => handleMainBtnClick(userName, userId)}
-            message={isDisabled ? "Queue is full" : "Join Queue"}
+            message={"go outside"}
           />
         </div>
 
@@ -149,7 +144,7 @@ export const Exit: FC = () => {
         >
           <PeopleList
             className="list-group"
-            people={Array.isArray(waitingQueue) ? waitingQueue : []}
+            people={[...waitingQueue]}
           />
         </div>
       </div>

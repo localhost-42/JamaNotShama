@@ -3,7 +3,7 @@ import ExcelJS from "exceljs";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { saveAs } from "file-saver";
-import type { ExcelReportRow } from "../../../utils/types";
+import type { LogRow } from "../../../utils/types";
 
 
 
@@ -15,9 +15,9 @@ export const useExcelConverter = () => {
     useEffect(() => {
         const makeExcel = async () => {
             const uncheckedRes =
-            (await api.excel().get()).data 
+            (await api.logs().getAll()).data 
 
-            const result: ExcelReportRow[] = uncheckedRes.length === 0 ? uncheckedRes :
+            const result: LogRow[] = uncheckedRes.length === 0 ? uncheckedRes :
        [{
         name: '',
         exit_time: '',
