@@ -68,8 +68,8 @@ export const getLogs = async (): Promise<LogRow[]> => {
     l.enter_time as date
     FROM jns.list l
     JOIN jns.users u ON u.id = l.user_id
-    WHERE l.exit_time != NULL AND 
-    l.enter_time != NULL;`,
+    WHERE l.exit_time IS NOT NULL AND 
+    l.enter_time IS NOT NULL;`,
     );
 
     return r.rows
