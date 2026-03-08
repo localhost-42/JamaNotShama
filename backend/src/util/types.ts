@@ -1,4 +1,4 @@
-// import { excelDB } from "../services/other.service.js";
+
 
 export interface LogRow {
  name: string;
@@ -7,12 +7,7 @@ export interface LogRow {
   date: Date | string;
 }
 
-// export interface ExcelReportRow {
-//   name: string;
-//   exit_time: Date | string;
-//   return_time: Date | string;
-//   date: Date | string;
-// }
+
 
 export type UserRow = {
   userId: number;
@@ -24,6 +19,11 @@ export type ListRow = {
   enterTime: Date;
   exitTime: Date;
 };
+
+export type nameRow = {
+  name: UserRow['name'];
+};
+
 
 export type QueueRow = {
   userId: number;

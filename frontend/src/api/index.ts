@@ -14,9 +14,9 @@ export default {
   queue() {
     return {
       enterQueue: (id: number): Promise<AxiosResponse<void>> =>
-        axiosInstance.post(`/enter/${id}/queue`),
+        axiosInstance.post(`/queue/enter/${id}`),
       exitQueue: (id: number): Promise<AxiosResponse<void>> =>
-        axiosInstance.delete(`/exit/${id}/queue`),
+        axiosInstance.delete(`/queue/exit/${id}`),
       getAll: (): Promise<AxiosResponse<string[]>> =>
         axiosInstance.get(`/queue`),
     };
@@ -24,9 +24,9 @@ export default {
   list() {
     return {
       enterList: (id: number, name: string): Promise<AxiosResponse<void>> =>
-        axiosInstance.post(`/enter/${id}/list`, { name }),
+        axiosInstance.post(`/list/enter/${id}`, { name }),
       exitList: (id: number): Promise<AxiosResponse<void>> =>
-        axiosInstance.put(`/exit/${id}/list`),
+        axiosInstance.put(`/list/exit/${id}`),
       getAll: (): Promise<AxiosResponse<string[]>> =>
         axiosInstance.get(`/list`),
     };
@@ -34,7 +34,7 @@ export default {
   logs() {
     return {
       getAll: (): Promise<AxiosResponse<LogRow[]>> =>
-        axiosInstance.get(`/logs`),
+        axiosInstance.get(`/list/logs`),
     };
   }
 };
