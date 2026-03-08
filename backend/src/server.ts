@@ -1,12 +1,12 @@
 import express from "express";
 import path from "node:path";
 import listRouter from "./routers/list.routes.js";
-import loginRouter from './routers/login.route.js'
-import queueRouter from './routers/queue.routes.js'
+import loginRouter from "./routers/login.route.js";
+import queueRouter from "./routers/queue.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 
 app.use(express.json());
 app.use("/api/lists", listRouter);
