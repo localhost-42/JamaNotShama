@@ -26,5 +26,5 @@ export const useGetLogs = (peopleOutside: string[]) => {
          fetchLogs();
         }, [peopleOutside]);
  
-    return { logs, setLogs };
+    return { logs };
 }
