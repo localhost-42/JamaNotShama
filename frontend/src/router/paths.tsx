@@ -4,6 +4,7 @@ import { Home } from "../views/Home";
 import Layout from "../views/Layout";
 import { EntryRedirect } from "../views/EntryRedirect";
 import { ExcelPage } from "../views/Excel";
+import { Calender } from "../views/calender";
 
 export interface Page {
   path: string;
@@ -29,6 +30,12 @@ export const routes: Page[] = [
     path: "/excel",
     element: <ExcelPage />,
     name: "אקסל",
+    isShown: true,
+  },
+   {
+    path: "/calender",
+    element: <Calender />,
+    name: "מערכת שעות",
     isShown: true,
   },
 ];
