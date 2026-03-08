@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "..";
 
-
 export const useGetLists = () => {
 const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
 
@@ -12,7 +11,7 @@ useEffect(() => {
       .list()
       .getAll()
       .then((response) => {
-        setPeopleOutside(Array.isArray(response.data) ? response.data : [] );
+        setPeopleOutside(response.data ? response.data.map(({name}) => name) : [] );
       })
       .catch((error) => {
         alert("Error fetching queue:" + error.message);
