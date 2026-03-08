@@ -13,15 +13,19 @@ export const useGetLogs = (peopleOutside: string[]) => {
      useEffect(() => {
          const fetchLogs = async () => {
              api.logs().getAll().then((logs) => {
-                 setLogs(Array.isArray(logs.data) ? logs.data : []);
+                console.log(logs.data);
+                    
+                
+                 setLogs(logs.data.length !== 0 ? logs.data : []);
              }).catch((error: Error) => {
                  alert("Error fetching logs:" + error.message);
              });
          }
  
+
+         
          fetchLogs();
- 
-     }, [peopleOutside]);
+        }, [peopleOutside]);
  
     return { logs, setLogs };
 }

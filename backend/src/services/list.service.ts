@@ -62,16 +62,17 @@ export const getLogs = async (): Promise<LogRow[]> => {
   try {
     const r = await pool.query<LogRow>(
       `SELECT 
-    l.enter_time::timestamp::time,
-    l.exit_time::timestamp::time,
+    l.enter_time,
+    l.exit_time,
     u.name,
-    l.enter_time::timestamp::date as date
+    l.enter_time as date
     FROM jns.list l
     JOIN jns.users u ON u.id = l.user_id
     WHERE l.exit_time != NULL AND 
     l.enter_time != NULL;`,
     );
-    return r.rows;
+
+    return r.rows
   } catch (err) {
     throw err;
   }
