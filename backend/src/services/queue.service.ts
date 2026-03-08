@@ -1,6 +1,7 @@
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
 import type { ListRow, nameRow, UserRow } from "../util/types.js";
+import { io } from "../server.js";
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -9,12 +10,13 @@ function isPgUniqueViolation(err: unknown): boolean {
   );
 }
 
-
 export const enterQueue = async (id: number): Promise<void> => {
   try {
     await pool.query<ListRow>("INSERT INTO jns.queue(user_id) VALUES ($1)", [
       id,
     ]);
+
+    io.emit("queueUpdated");
   } catch (err) {
     if (isPgUniqueViolation(err)) {
       throw new AppError("User is already in the queue", 400);
@@ -26,6 +28,8 @@ export const enterQueue = async (id: number): Promise<void> => {
 export const exitQueue = async (id: number): Promise<void> => {
   try {
     await pool.query<ListRow>("DELETE FROM jns.queue WHERE user_id = $1", [id]);
+
+    io.emit("queueUpdated");
   } catch (err) {
     if (isPgUniqueViolation(err)) {
       throw new AppError("User is already out of the queue", 400);
@@ -34,8 +38,6 @@ export const exitQueue = async (id: number): Promise<void> => {
     throw err;
   }
 };
-
-
 
 export const getQueue = async (): Promise<nameRow[]> => {
   try {
