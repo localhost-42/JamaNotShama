@@ -1,7 +1,7 @@
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
 import { type QueryResult } from "pg";
-import type { ExcelReportRow, LogRow, UserRow } from "../util/types.js";
+import type {  LogRow, UserRow } from "../util/types.js";
 
 function isPgUniqueViolation(err: unknown): boolean {
   // pg error code for unique_violation
@@ -25,28 +25,34 @@ export const loginDB = async (id: number, name: string): Promise<UserRow> => {
   }
 };
 
-export const excelDB = async (): Promise<ExcelReportRow[]> => {
+// export const excelDB = async (): Promise<ExcelReportRow[]> => {
+//   try {
+//     const result = await pool.query<ExcelReportRow>(`
+//     SELECT 
+//     l.enter_time::timestamp::time,
+//     l.exit_time::timestamp::time,
+//     u.name,
+//     l.enter_time::timestamp::date as date
+//     FROM jns.list l
+//     JOIN jns.users u ON u.id = l.user_id
+//     `);
+
+//     return result.rows;
+//   } catch (err) {
+//     throw err;
+//   }
+// };
+
+export const logsDB = async (): Promise<LogRow[]> => {
   try {
-    const result = await pool.query<ExcelReportRow>(`
-    SELECT 
+    const r: QueryResult<LogRow> = await pool.query(
+      `SELECT 
     l.enter_time::timestamp::time,
     l.exit_time::timestamp::time,
     u.name,
     l.enter_time::timestamp::date as date
     FROM jns.list l
-    JOIN jns.users u ON u.id = l.user_id
-    `);
-
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const logsDB = async (): Promise<LogRow[]> => {
-  try {
-    const r: QueryResult<LogRow> = await pool.query(
-      "SELECT * FROM jns.list WHERE exit_time IS NOT NULL AND enter_time IS NOT NULL ORDER BY enter_time ASC",
+    JOIN jns.users u ON u.id = l.user_id`,
     );
     return r.rows;
   } catch (err) {
