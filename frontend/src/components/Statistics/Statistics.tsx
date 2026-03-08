@@ -2,58 +2,82 @@ import { useState, type FC } from "react";
 import { useGetLists, useGetLogs } from "../../api/hooks";
 import type { LogRow } from "../../utils/types";
 
-
 export const Statistics: FC = () => {
-    const {peopleOutside} = useGetLists();
-    const {logs} = useGetLogs(peopleOutside);
-    const [openDay, setOpenDay] = useState<LogRow['exit_time' | 'enter_time'] | null>(null);
-    const distinctDates = [
-  ...new Set(logs.map(log => new Date(log.date).toISOString().split("T")[0]))
-];
+  const { peopleOutside } = useGetLists();
+  const { logs } = useGetLogs(peopleOutside);
 
+  const [openDay, setOpenDay] = useState<string | null>(null);
 
- 
+  const formatTime = (date: string | Date) =>
+    new Date(date).toLocaleTimeString("he-IL", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
+  // Group logs by day
+  const logsByDate = logs.reduce<Record<string, LogRow[]>>((acc, log) => {
+    const day = new Date(log.date).toISOString().split("T")[0];
 
+    if (!acc[day]) {
+      acc[day] = [];
+    }
 
-   
-    return (
-        <div className="container mt-3">
-            <h1 className="mb-3">Statistics</h1>
-            {logs.length === 0 && (
-                <div className="alert alert-secondary">No logs available</div>
-            )}
+    acc[day].push(log);
 
-            {distinctDates.map((date) => (
-                <div key={date.toLocaleString()} className="mb-3">
-                    <button
-                    style={{minWidth: '40vh'}}
-                        className="btn btn-light w-100 text-start"
-                       onClick={() => setOpenDay(openDay === date ? null : date)}
-                    >
-                        {date.toLocaleString()} 
-                    </button>
-                  { openDay === date &&
-                        <div className="d-flex justify-content-center">
-                            <ul className="list-group container bg-light p-3" >
-                        { logs
-                            .filter((l) => l.date === date)
-                            .map((log) => (
-                                
-                                <li className="list-item d-flex m-1 justify-content-between">
-                                    <span>{log.name}</span>
-                                    <span>
-                                    {log.enter_time} - {log.exit_time}
-                                    </span>
-                                </li>
-                                ))
-                                }   
-                    </ul>
-                </div>
+    return acc;
+  }, {});
 
-            }
-            </div>
-            ))}
-        </div>
+  // Sort logs inside each day
+  Object.keys(logsByDate).forEach((day) => {
+    logsByDate[day].sort(
+      (a, b) =>
+        new Date(a.enter_time).getTime() -
+        new Date(b.enter_time).getTime()
     );
-}
+  });
+
+  const distinctDates = Object.keys(logsByDate).sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  );
+
+  return (
+    <div className="container mt-3">
+      <h1 className="mb-3">Statistics</h1>
+
+      {logs.length === 0 && (
+        <div className="alert alert-secondary">No logs available</div>
+      )}
+
+      {distinctDates.map((date) => (
+        <div key={date} className="mb-3">
+          <button
+            className="btn btn-light w-100 text-start d-flex justify-content-between align-items-center"
+            onClick={() => setOpenDay(openDay === date ? null : date)}
+          >
+            <span>{date}</span>
+            <span className="badge bg-secondary">
+              {logsByDate[date].length}
+            </span>
+          </button>
+
+          {openDay === date && (
+            <ul className="list-group mt-2">
+              {logsByDate[date].map((log) => (
+                <li
+                  key={`${log.name}-${log.enter_time}-${log.exit_time}`}
+                  className="list-group-item d-flex justify-content-between"
+                >
+                  <span>{log.name}</span>
+                  <span>
+                    {formatTime(log.enter_time)} -{" "}
+                    {log.exit_time ? formatTime(log.exit_time) : "N/A"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
