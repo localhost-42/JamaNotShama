@@ -1,9 +1,9 @@
 
 
 export interface LogRow {
- name: string;
- enter_time: string;
-  exit_time: string;
+ name: UserRow['name'];
+ enter_time: ListRow['enterTime'];
+  exit_time: ListRow['exitTime'];
   date: Date | string;
 }
 
