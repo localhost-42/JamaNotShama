@@ -12,7 +12,7 @@ useEffect(() => {
       .queue()
       .getAll()
       .then((response) => {
-        setPeopleOutside(Array.isArray(response.data) ? response.data : []);
+        setPeopleOutside(response.data ? [] : response.data );
       })
       .catch((error) => {
         alert("Error fetching queue:" + error.message);
