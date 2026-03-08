@@ -8,12 +8,12 @@ export const Exit: FC = () => {
   const {peopleOutside, setPeopleOutside} = useGetLists();
   const {waitingQueue, setWaitingQueue} =  useGetQueue();
 
+  const MAX_OUTSIDE = 5;
 
   
   const userName = localStorage.getItem("name") || "Unknown User";
   const userId = Number(localStorage.getItem("id")) || 0;
 
-  const MAX_OUTSIDE = 5;
 
   const isDisabled = !waitingQueue
     .slice(0, MAX_OUTSIDE - peopleOutside.length)
@@ -84,7 +84,7 @@ export const Exit: FC = () => {
         : joinWaitingQueue)
       : changeQueue;
 
-  const handleExitWaitingQueue = leaveWaitingQueue;
+
 
   return (
     <div
@@ -131,7 +131,7 @@ export const Exit: FC = () => {
               className="btn btn-secondary btn-sm"
               isDisabled={!waitingQueue.includes(userName)}
               handleMainBtnClick={() =>
-                handleExitWaitingQueue(userName, userId)
+                leaveWaitingQueue(userName, userId)
               }
               message="stop waiting"
             />

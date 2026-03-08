@@ -1,10 +1,11 @@
 import { useState, type FC } from "react";
-import { useGetLogs } from "../../api/hooks";
+import { useGetLists, useGetLogs } from "../../api/hooks";
 import type { LogRow } from "../../utils/types";
 
 
 export const Statistics: FC = () => {
-    const {logs} = useGetLogs();
+    const {peopleOutside} = useGetLists();
+    const {logs} = useGetLogs(peopleOutside);
     const [openDay, setOpenDay] = useState<LogRow['exit_time' | 'return_time'] | null>(null);
     const distinctDates = [
   ...new Set(logs.map(log => new Date(log.date).toISOString().split("T")[0]))

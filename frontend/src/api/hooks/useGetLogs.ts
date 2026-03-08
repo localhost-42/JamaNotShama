@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "..";
 import type { LogRow } from "../../utils/types";
-import { useGetLists } from "./useGetLists";
 
 
-export const useGetLogs = () => {
+
+
+export const useGetLogs = (peopleOutside: string[]) => {
   const [logs, setLogs] = useState<LogRow[]>([]);
-  const {peopleOutside} = useGetLists();
+
 
  
      useEffect(() => {
