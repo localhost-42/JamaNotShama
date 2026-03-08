@@ -32,7 +32,15 @@ app.get("*", (req, res) => {
 
 app.use(errorMiddleware);
 
-app.listen(port, () => {
+io.on("connection", (socket) => {
+  console.log("socket connected", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("socket disconnected", socket.id);
+  });
+});
+
+server.listen(port, () => {
   console.log("Listening on port " + port);
 });
 
