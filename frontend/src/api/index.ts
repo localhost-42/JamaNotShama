@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type { LogRow } from "../utils/types";
+import type { LogRow, nameRow } from "../utils/types";
 const axiosInstance = axios.create({
   baseURL: "/api",
 });
@@ -17,7 +17,7 @@ export default {
         axiosInstance.post(`/queues/enter/${id}`),
       exitQueue: (id: number): Promise<AxiosResponse<void>> =>
         axiosInstance.delete(`/queues/exit/${id}`),
-      getAll: (): Promise<AxiosResponse<string[]>> =>
+      getAll: (): Promise<AxiosResponse<nameRow[]>> =>
         axiosInstance.get(`/queues`),
     };
   },
@@ -27,7 +27,7 @@ export default {
         axiosInstance.post(`/lists/enter/${id}`, { name }),
       exitList: (id: number): Promise<AxiosResponse<void>> =>
         axiosInstance.put(`/lists/exit/${id}`),
-      getAll: (): Promise<AxiosResponse<string[]>> =>
+      getAll: (): Promise<AxiosResponse<nameRow[]>> =>
         axiosInstance.get(`/lists`),
     };
   },
