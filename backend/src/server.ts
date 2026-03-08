@@ -9,9 +9,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use("/api/list", listRouter);
+app.use("/api/lists", listRouter);
 app.use("/api/login", loginRouter);
-app.use("/api/queue", queueRouter);
+app.use("/api/queues", queueRouter);
 
 const publicDir = path.join(process.cwd(), "public");
 app.use(express.static(publicDir));

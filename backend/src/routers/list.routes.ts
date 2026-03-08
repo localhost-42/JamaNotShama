@@ -11,7 +11,7 @@ const router = Router();
 router.post("/enter/:id", enterListHandler);
 router.put("/exit/:id", exitListHandler);
 
-router.get("/list", getListHandler);
+router.get("/", getListHandler);
 router.get("/logs", logs);
 
 
