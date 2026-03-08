@@ -30,7 +30,7 @@ export const Statistics: FC = () => {
   // Sort logs inside each day
   Object.keys(logsByDate).forEach((day) => {
     logsByDate[day].sort(
-      (a, b) =>
+      (b, a) =>
         new Date(a.enter_time).getTime() -
         new Date(b.enter_time).getTime()
     );
