@@ -6,12 +6,189 @@
       content="6sA1shWvIXdf_oGjP3Zv_HxfLtU6W9iuu_ftIgIPKOo"
     />
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/alpaca.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Jama</title>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="bg-dark bg-gradient">
+    <div
+      class="position-fixed top-0 start-0 w-100 h-100 bg-primary opacity-25 z-0"
+    ></div>
+    <div id="root" class="position-relative z-1"></div>
+    <footer class="course-footer mt-5">
+      <div class="container py-5">
+        <div class="row g-4 d-flex justify-content-between">
+          <div class="col-lg-5 col-md-6">
+            <h3 class="footer-title mb-3">JNS Course Management</h3>
+            <p class="footer-text mb-3">
+              מערכת לניהול קורסים, משתמשים ותהליכי עבודה. הפלטפורמה מאפשרת גישה
+              נוחה למידע, מעקב אחר פעילויות וניהול מסודר של סביבת הלמידה.
+            </p>
+            <div class="footer-badge">Personal Educational Project</div>
+          </div>
+
+          <div class="col-lg-4 col-md-12">
+            <h5 class="footer-section-title mb-3">שירות ותמיכה</h5>
+            <p class="footer-text mb-2">
+              לשאלות, דיווח על תקלה או סיוע טכני ניתן לפנות לכתובת:
+            </p>
+            <a class="support-mail" href="mailto:support@jns-courses.example">
+              no-one-asked-you@jns-team.yoav-server.notBsmch
+            </a>
+
+            <div class="footer-contact-box mt-4">
+              <div class="small text-uppercase fw-semibold mb-2">זמינות</div>
+              <div>Sunday - Thursday</div>
+              <div>09:00 - 19:00</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="footer-divider my-4" />
+
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2"
+        >
+          <p class="m-0 footer-copy">
+            © 2026 JNS (JamaNotShama) Course Management. All rights reserved.
+          </p>
+        </div>
+      </div>
+
+      <script type="module" src="/src/main.tsx"></script>
+      <style>
+        .course-footer {
+          background:
+            radial-gradient(
+              circle at top left,
+              rgba(13, 110, 253, 0.22),
+              transparent 35%
+            ),
+            radial-gradient(
+              circle at bottom right,
+              rgba(111, 66, 193, 0.18),
+              transparent 30%
+            ),
+            linear-gradient(135deg, #0f172a, #111827 45%, #1e293b);
+          color: #f8fafc;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .course-footer::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0.03),
+            rgba(255, 255, 255, 0)
+          );
+          pointer-events: none;
+        }
+
+        .course-footer .container {
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-title {
+          font-size: 1.9rem;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          margin: 0;
+          color: #ffffff;
+        }
+
+        .footer-section-title {
+          color: #cbd5e1;
+          font-weight: 700;
+          font-size: 1rem;
+          letter-spacing: 0.3px;
+        }
+
+        .footer-text {
+          color: #cbd5e1;
+          line-height: 1.8;
+          font-size: 0.97rem;
+          max-width: 95%;
+        }
+
+        .footer-badge {
+          display: inline-block;
+          padding: 0.55rem 0.95rem;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #e2e8f0;
+          font-size: 0.85rem;
+          font-weight: 600;
+          backdrop-filter: blur(6px);
+        }
+
+        .footer-links li {
+          margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+          color: #e2e8f0;
+          text-decoration: none;
+          transition: all 0.25s ease;
+          position: relative;
+        }
+
+        .footer-links a:hover {
+          color: #60a5fa;
+          padding-right: 0.25rem;
+        }
+
+        .support-mail {
+          display: inline-block;
+          color: #93c5fd;
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 1rem;
+          transition: all 0.25s ease;
+        }
+
+        .support-mail:hover {
+          color: #bfdbfe;
+          text-decoration: underline;
+        }
+
+        .footer-contact-box {
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          padding: 1rem 1.1rem;
+          color: #e2e8f0;
+          backdrop-filter: blur(8px);
+          max-width: 260px;
+        }
+
+        .footer-divider {
+          border-color: rgba(255, 255, 255, 0.12);
+          opacity: 1;
+        }
+
+        .footer-copy,
+        .footer-copy-secondary {
+          color: #94a3b8;
+          font-size: 0.9rem;
+        }
+
+        @media (max-width: 767.98px) {
+          .footer-title {
+            font-size: 1.6rem;
+          }
+
+          .footer-text {
+            max-width: 100%;
+          }
+        }
+      </style>
+    </footer>
   </body>
 </html>
