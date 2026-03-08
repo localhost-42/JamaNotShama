@@ -19,7 +19,7 @@ useEffect(() => {
   };
 
   fetchData();
-}, [peopleOutside]);
+}, []);
 
 return {peopleOutside, setPeopleOutside};
 }

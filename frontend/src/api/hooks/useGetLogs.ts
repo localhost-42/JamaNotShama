@@ -15,7 +15,8 @@ export const useGetLogs = (peopleOutside: string[]) => {
              api.logs().getAll().then((logs) => {                    
                 
                  setLogs(logs.data ? logs.data : []);
-             }).catch((error: Error) => {
+             }
+            ).catch((error: Error) => {
                  alert("Error fetching logs:" + error.message);
              });
          }

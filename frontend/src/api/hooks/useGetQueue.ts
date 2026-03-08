@@ -24,7 +24,7 @@ export const useGetQueue = () => {
     };
 
     fetchData();
-  }, [waitingQueue]);
+  }, []);
 
   return {waitingQueue, setWaitingQueue};
 }
