@@ -21,7 +21,7 @@ export const useExcelConverter = () => {
        [{
         name: '',
         exit_time: '',
-        return_time:'',
+        enter_time:'',
         date: '',
       }];
 
@@ -31,14 +31,14 @@ export const useExcelConverter = () => {
       worksheet.columns = [
         { header: "שם", key: "name", width: 25 },
         { header: "תאריך", key: "date", width: 20 },
-        { header: "זמן יציאה", key: "exit_time", width: 20 },
-        { header: "זמן חזרה", key: "return_time", width: 20 },
+        { header: "זמן יציאה", key: "enter_time", width: 20 },
+        { header: "זמן חזרה", key: "exit_time", width: 20 },
       ];
 
       worksheet.addRows(result);
 
       worksheet.getColumn("exit_time").numFmt = "hh:mm";
-      worksheet.getColumn("return_time").numFmt = "hh:mm";
+      worksheet.getColumn("enter_time").numFmt = "hh:mm";
       worksheet.getColumn("date").numFmt = "yyyy-mm-dd";
 
       worksheet.getRow(1).eachCell((cell) => {

@@ -6,7 +6,7 @@ import type { LogRow } from "../../utils/types";
 export const Statistics: FC = () => {
     const {peopleOutside} = useGetLists();
     const {logs} = useGetLogs(peopleOutside);
-    const [openDay, setOpenDay] = useState<LogRow['exit_time' | 'return_time'] | null>(null);
+    const [openDay, setOpenDay] = useState<LogRow['exit_time' | 'enter_time'] | null>(null);
     const distinctDates = [
   ...new Set(logs.map(log => new Date(log.date).toISOString().split("T")[0]))
 ];
@@ -43,7 +43,7 @@ export const Statistics: FC = () => {
                                 <li className="list-item d-flex m-1 justify-content-between">
                                     <span>{log.name}</span>
                                     <span>
-                                    {log.return_time} - {log.exit_time}
+                                    {log.enter_time} - {log.exit_time}
                                     </span>
                                 </li>
                                 ))
