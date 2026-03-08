@@ -3,12 +3,12 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar/index";
 
 const Layout: FC = () => {
-    return (
-        <>
-            <Navbar />
-            <Outlet />
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
 };
 
 export default Layout;

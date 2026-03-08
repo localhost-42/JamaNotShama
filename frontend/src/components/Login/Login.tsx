@@ -22,7 +22,6 @@ export const Login: FC = () => {
       setIsLoading(false);
       return;
     }
-    
 
     try {
       await api.users().postUser(parseInt(id), name);
@@ -58,32 +57,37 @@ export const Login: FC = () => {
   }, [navigate]);
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1>התחברות</h1>
-        {error && <div className="error">{error}</div>}
-        <label>
-          מספר חניך
-          <input
-            type="number"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            disabled={isLoading}
-          />
-        </label>
-        <label>
-          שם מלא
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={isLoading}
-          />
-        </label>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
-    </div>
+    <>
+      <h1 className="text-light text-center mt-5">
+        Welcome, to JNS (JamaNotShama) Project
+      </h1>
+      <div className="login-container">
+        <form className="login-form" onSubmit={handleSubmit}>
+          <h1>התחברות</h1>
+          {error && <div className="error">{error}</div>}
+          <label>
+            מספר חניך
+            <input
+              type="number"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              disabled={isLoading}
+            />
+          </label>
+          <label>
+            שם מלא
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+            />
+          </label>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
