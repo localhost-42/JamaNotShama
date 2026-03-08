@@ -79,9 +79,9 @@ export const Exit: FC = () => {
     : ![...waitingQueue]
           .splice(0, MAX_OUTSIDE - peopleOutside.length)
           .includes(userName)
-      ? !(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE)
+      ? (!(peopleOutside.length + waitingQueue.length > MAX_OUTSIDE)
         ?  goOutside
-        : joinWaitingQueue
+        : joinWaitingQueue)
       : changeQueue;
 
   const handleExitWaitingQueue = leaveWaitingQueue;

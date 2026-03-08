@@ -7,7 +7,7 @@ import {
   getListHandler,
   getQueueHandler,
 } from "../controllers/list.controller.js";
-import { login, logs, excelHandler } from "../controllers/other.controller.js";
+import { login, logs } from "../controllers/other.controller.js";
 const router = Router();
 
 router.post("/enter/:id/queue", enterQueueHandler);
@@ -18,7 +18,6 @@ router.get("/queue", getQueueHandler);
 router.get("/list", getListHandler);
 router.post("/login", login);
 router.get("/logs", logs);
-router.get('/excel', excelHandler)
 
 
 export default router;

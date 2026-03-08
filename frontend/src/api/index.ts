@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type { ExcelReportRow, LogRow } from "../utils/types";
+import type { LogRow } from "../utils/types";
 const axiosInstance = axios.create({
   baseURL: "/api",
 });
@@ -36,11 +36,5 @@ export default {
       getAll: (): Promise<AxiosResponse<LogRow[]>> =>
         axiosInstance.get(`/logs`),
     };
-  },
-  excel() {
-    return {
-      get: (): Promise<AxiosResponse<ExcelReportRow[]>> =>
-        axiosInstance.get("/excel"),
-    };
-  },
+  }
 };
