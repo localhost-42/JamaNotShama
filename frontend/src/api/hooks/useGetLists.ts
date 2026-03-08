@@ -2,26 +2,25 @@ import { useEffect, useState } from "react";
 import api from "..";
 
 
-
-
 export const useGetLists = () => {
- const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
+const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      api
-        .list()
-        .getAll()
-        .then((response) => {
-          setWaitingQueue(Array.isArray(response.data) ? []: response.data);
-        })
-        .catch((error) => {
-          alert("Error fetching waiting list:" + error.message);
-        });
-    };
 
-    fetchData();
-  }, [waitingQueue]);
+useEffect(() => {
+  const fetchData = async () => {
+    api
+      .list()
+      .getAll()
+      .then((response) => {
+        setPeopleOutside(Array.isArray(response.data) ? response.data : [] );
+      })
+      .catch((error) => {
+        alert("Error fetching queue:" + error.message);
+      });
+  };
 
-  return {waitingQueue, setWaitingQueue};
+  fetchData();
+}, [peopleOutside]);
+
+return {peopleOutside, setPeopleOutside};
 }
