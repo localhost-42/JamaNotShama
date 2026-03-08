@@ -4,3 +4,7 @@ export interface LogRow {
   return_time: string;
   date: Date | string;
 }
+
+export type nameRow = {
+  name: string;
+};
