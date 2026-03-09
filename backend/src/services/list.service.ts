@@ -13,6 +13,18 @@ function isPgUniqueViolation(err: unknown): boolean {
 
 export const enterList = async (id: number): Promise<void> => {
   try {
+    const MAX_OUTSIDE = 5;
+
+    const countResult = await pool.query<{ count: string }>(
+      "SELECT COUNT(*) FROM jns.list WHERE exit_time IS NULL",
+    );
+
+    const currentCount = Number(countResult.rows[0].count);
+
+    if (currentCount >= MAX_OUTSIDE) {
+      throw new AppError("List is full", 400);
+    }
+
     await pool.query<ListRow>(
       "INSERT INTO jns.list(user_id, enter_time) VALUES ($1, NOW())",
       [id],
