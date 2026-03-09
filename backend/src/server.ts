@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import listRouter from "./routers/list.routes.js";
 import loginRouter from "./routers/login.route.js";
 import queueRouter from "./routers/queue.routes.js";
+import scoreRouter from "./routers/score.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -19,6 +20,7 @@ export const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use('/api/scores', scoreRouter);
 app.use("/api/lists", listRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/queues", queueRouter);

@@ -9,6 +9,7 @@ import { GameEngine } from "../../engine/GameEngine"
 import { useKeyboard } from "../../hooks/useKeyboard"
 import {ScoreBoard} from "../ScoreBoard"
 import type { KeyState } from "../../types/game"
+import { useUpdateTopScore } from "../../api/hooks/useUpdateTopScore"
 
 export interface GameHandle {
   start: () => void
@@ -20,6 +21,7 @@ export const GameCanvas = forwardRef<GameHandle>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<GameEngine | undefined>(undefined)
   const keys = useKeyboard()
+   const {updateTopScore} = useUpdateTopScore();
 
   const [score, setScore] = useState(0)
   const [highScore, setHighScore] = useState(
@@ -39,7 +41,7 @@ export const GameCanvas = forwardRef<GameHandle>((props, ref) => {
       (finalScore) => {
         setHighScore((prev) => {
           const newHigh = Math.max(prev, finalScore)
-          localStorage.setItem("alpaca_highscore", String(newHigh))
+          localStorage.setItem("alpaca_highscore", String(updateTopScore(newHigh, Number(localStorage.getItem('id')))))
           return newHigh
         })
       }

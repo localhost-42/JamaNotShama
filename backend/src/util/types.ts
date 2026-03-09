@@ -7,6 +7,10 @@ export interface LogRow {
   date: Date | string;
 }
 
+export interface ScoreRow {
+  name: UserRow['name'];
+  score: number;
+}
 
 
 export type UserRow = {

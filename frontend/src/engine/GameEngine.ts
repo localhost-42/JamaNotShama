@@ -4,6 +4,7 @@ import { rectCollision } from "./physics"
 import { BASE_SPEED, SPEED_SCALE, GAME_WIDTH, GAME_HEIGHT } from "./config"
 import type { KeyState } from "../types/game"
 
+
 export class GameEngine {
   private ctx: CanvasRenderingContext2D
   private getKeys: () => KeyState
@@ -48,6 +49,7 @@ export class GameEngine {
     this.start()
   }
 
+ 
 
   private loop = (time: number) => {
     const rawDt = (time - this.lastTime) / 1000
@@ -63,6 +65,7 @@ export class GameEngine {
       this.reset()
       return
     } else {
+      
       this.drawGameOver()
     }
 

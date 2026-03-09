@@ -8,3 +8,9 @@ export interface LogRow {
 export type nameRow = {
   name: string;
 };
+
+
+export type ScoreRow = {
+  name: string;
+  score: number;
+};

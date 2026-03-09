@@ -1,5 +1,6 @@
 import { useRef } from "react"
 import {GameCanvas, type GameHandle } from "../components/GameCanvas"
+import { LeaderBoard } from "../components/LeaderBoard"
 
 export const GameAlpaca = () => {
   const gameRef = useRef<GameHandle>(null)
@@ -14,6 +15,7 @@ export const GameAlpaca = () => {
       }}
     >
       <GameCanvas ref={gameRef} />
+      <LeaderBoard />
     </div>
   )
 }
