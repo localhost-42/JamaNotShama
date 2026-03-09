@@ -17,10 +17,8 @@ export const useGetLists = () => {
       .getAll()
       .then((response) => {
         setPeopleOutside(
-          response.data
-            ? response.data.map(
-                ({ name, enterTime }) => name + " " + formatTime(enterTime),
-              )
+          response.data.length
+            ? response.data.map(({ name, enterTime }) => `${name}  ${formatTime(enterTime)}`)
             : [],
         );
       })
