@@ -5,6 +5,7 @@ import Layout from "../views/Layout";
 import { EntryRedirect } from "../views/EntryRedirect";
 import { ExcelPage } from "../views/Excel";
 import { Calender } from "../views/calender";
+import { GameAlpaca } from "../views/GameAlpaca";
 
 export interface Page {
   path: string;
@@ -38,6 +39,12 @@ export const routes: Page[] = [
     name: "מערכת שעות",
     isShown: true,
   },
+  {
+    path: "/alpaca-run",
+    element: <GameAlpaca />,
+    name: "רוצי אלפקה",
+    isShown: true,
+  }
 ];
 
 export const paths = [
