@@ -32,6 +32,11 @@ export class GameEngine {
   }
 
   start() {
+    this.running = true
+    this.score = 0
+    this.player = new Player();
+    this.obstacles.active = []
+    this.lastTime = performance.now()
     this.rafId = requestAnimationFrame(this.loop)
   }
 
@@ -39,14 +44,24 @@ export class GameEngine {
     cancelAnimationFrame(this.rafId)
   }
 
+  reset() {
+    this.start()
+  }
+
+
   private loop = (time: number) => {
     const rawDt = (time - this.lastTime) / 1000
     const dt = Math.min(rawDt, 0.05)
     this.lastTime = time
 
+     const keys = this.getKeys()
+
     if (this.running) {
       this.update(dt)
       this.draw()
+    } else if(keys.ArrowUp) {
+      this.reset()
+      return
     } else {
       this.drawGameOver()
     }
@@ -54,6 +69,7 @@ export class GameEngine {
     this.rafId = requestAnimationFrame(this.loop)
   }
 
+  
   private update(dt: number) {
     const keys = this.getKeys()
     const jumpPressed = keys.ArrowUp && !this.prevJump
