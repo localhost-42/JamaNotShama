@@ -13,11 +13,13 @@ export const Exit: FC = () => {
   const userName = localStorage.getItem("name") || "Unknown User";
   const userId = Number(localStorage.getItem("id")) || 0;
 
-  const isDisabled = !waitingQueue
-    .slice(0, MAX_OUTSIDE - peopleOutside.length)
-    .includes(userName)
-    ? waitingQueue.includes(userName)
-    : false;
+  const availableSpots = MAX_OUTSIDE - peopleOutside.length;
+
+  const canLeaveQueueNow = waitingQueue
+    .slice(0, availableSpots)
+    .includes(userName);
+
+  const isDisabled = waitingQueue.includes(userName) && !canLeaveQueueNow;
 
   const leaveWaitingQueue = (name: string, userId: number) => {
     api
@@ -71,20 +73,31 @@ export const Exit: FC = () => {
       });
   };
 
-  const changeQueue = (name: string, userId: number) => {
-    leaveWaitingQueue(name, userId);
-    goOutside(name, userId);
+  const changeQueue = async (name: string, userId: number) => {
+    try {
+      await api.queue().exitQueue(userId);
+      setWaitingQueue((prevQueue) =>
+        prevQueue.filter((person) => person !== name),
+      );
+
+      await api.list().enterList(userId, name);
+      setPeopleOutside((prevQueue) => [...prevQueue, name]);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert("Error moving from queue to list: " + error.message);
+      } else {
+        alert("Error moving from queue to list");
+      }
+    }
   };
 
   const handleMainBtnClick = peopleOutside.includes(userName)
     ? returnInside
-    : ![...waitingQueue]
-          .splice(0, MAX_OUTSIDE - peopleOutside.length)
-          .includes(userName)
-      ? peopleOutside.length < MAX_OUTSIDE
+    : canLeaveQueueNow
+      ? changeQueue
+      : peopleOutside.length < MAX_OUTSIDE && waitingQueue.length === 0
         ? goOutside
-        : joinWaitingQueue
-      : changeQueue;
+        : joinWaitingQueue;
 
   return (
     <div className="exit " style={{ maxHeight: "90vh" }}>
