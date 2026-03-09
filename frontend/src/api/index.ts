@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type { LogRow, nameRow } from "../utils/types";
+import type { LogRow, nameRow, ScoreRow } from "../utils/types";
 const axiosInstance = axios.create({
   baseURL: "/api",
 });
@@ -36,5 +36,13 @@ export default {
       getAll: (): Promise<AxiosResponse<LogRow[]>> =>
         axiosInstance.get(`/lists/logs`),
     };
-  }
+  },
+  scores() {
+    return {
+      updateTopScore: (id: number, score: number): Promise<AxiosResponse<number>> =>
+        axiosInstance.put(`/scores/${id}`, { score }),
+      getTopScores: (): Promise<AxiosResponse<ScoreRow[]>> =>
+        axiosInstance.get(`/scores`),
+    };
+  },
 };

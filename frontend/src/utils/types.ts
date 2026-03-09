@@ -9,3 +9,9 @@ export type nameRow = {
   name: string;
   enterTime: Date;
 };
+
+
+export type ScoreRow = {
+  name: string;
+  score: number;
+};
