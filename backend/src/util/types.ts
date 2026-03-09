@@ -1,13 +1,9 @@
-
-
 export interface LogRow {
- name: UserRow['name'];
- enter_time: ListRow['enterTime'];
-  exit_time: ListRow['exitTime'];
+  name: UserRow["name"];
+  enter_time: ListRow["enterTime"];
+  exit_time: ListRow["exitTime"];
   date: Date | string;
 }
-
-
 
 export type UserRow = {
   userId: number;
@@ -21,9 +17,9 @@ export type ListRow = {
 };
 
 export type nameRow = {
-  name: UserRow['name'];
+  name: UserRow["name"];
+  enterTime: Date;
 };
-
 
 export type QueueRow = {
   userId: number;

@@ -59,7 +59,7 @@ export const exitList = async (id: number): Promise<void> => {
 export const getList = async (): Promise<nameRow[]> => {
   try {
     const r = await pool.query<nameRow>(
-      "SELECT u.name FROM jns.list l JOIN jns.users u ON l.user_id = u.id WHERE l.exit_time IS NULL ORDER BY l.enter_time ASC",
+      "SELECT u.name, l.enter_time FROM jns.list l JOIN jns.users u ON l.user_id = u.id WHERE l.exit_time IS NULL ORDER BY l.enter_time ASC",
     );
     return r.rows;
   } catch (err) {

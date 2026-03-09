@@ -7,4 +7,5 @@ export interface LogRow {
 
 export type nameRow = {
   name: string;
+  enterTime: Date;
 };
