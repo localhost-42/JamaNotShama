@@ -4,7 +4,7 @@ import type { LogRow } from "../../utils/types";
 
 export const Statistics: FC = () => {
   const { peopleOutside } = useGetLists();
-  const { logs } = useGetLogs(peopleOutside);
+  const { logs } = useGetLogs(peopleOutside.map((person) => person.name));
 
   const [openDay, setOpenDay] = useState<string | null>(null);
 
@@ -31,13 +31,12 @@ export const Statistics: FC = () => {
   Object.keys(logsByDate).forEach((day) => {
     logsByDate[day].sort(
       (b, a) =>
-        new Date(a.enter_time).getTime() -
-        new Date(b.enter_time).getTime()
+        new Date(a.enter_time).getTime() - new Date(b.enter_time).getTime(),
     );
   });
 
   const distinctDates = Object.keys(logsByDate).sort(
-    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+    (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   );
 
   return (
