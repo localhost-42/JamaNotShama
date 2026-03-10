@@ -10,9 +10,7 @@ export const pool = new Pool({
 });
 
 pool.on("connect", (client) => {
-  client.query(
-    `SET TIME ZONE '${process.env.DB_TIMEZONE || "Asia/Jerusalem"}'`,
-  );
+  client.query(`SET TIME ZONE "Asia/Jerusalem"`);
 });
 
 // export const pool = new Pool({
