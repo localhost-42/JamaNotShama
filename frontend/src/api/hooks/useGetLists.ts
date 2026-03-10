@@ -5,11 +5,14 @@ import { socket } from "../socket";
 export const useGetLists = () => {
   const [peopleOutside, setPeopleOutside] = useState<string[]>([]);
 
-  const formatTime = (date: Date): string =>
-    `${date.getHours().toString().padStart(2, "0")}:${date
+  const formatTime = (dateValue: string | Date): string => {
+    const date = new Date(dateValue);
+
+    return `${date.getHours().toString().padStart(2, "0")}:${date
       .getMinutes()
       .toString()
       .padStart(2, "0")}`;
+  };
 
   const fetchList = async () => {
     api
@@ -18,7 +21,9 @@ export const useGetLists = () => {
       .then((response) => {
         setPeopleOutside(
           response.data.length
-            ? response.data.map(({ name, enterTime }) => `${name}  ${formatTime(enterTime)}`)
+            ? response.data.map(
+                ({ name, enterTime }) => `${name}  ${formatTime(enterTime)}`,
+              )
             : [],
         );
       })

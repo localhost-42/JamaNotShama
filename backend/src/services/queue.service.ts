@@ -42,7 +42,7 @@ export const exitQueue = async (id: number): Promise<void> => {
 export const getQueue = async (): Promise<nameRow[]> => {
   try {
     const r = await pool.query<nameRow>(
-      "SELECT u.name, q.enter_time FROM jns.queue q JOIN jns.users u ON q.user_id = u.id ORDER BY q.enter_time ASC",
+      "SELECT u.name FROM jns.queue q JOIN jns.users u ON q.user_id = u.id ORDER BY q.enter_time ASC",
     );
     return r.rows;
   } catch (err) {

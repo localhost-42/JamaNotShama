@@ -1,17 +1,14 @@
-
-
 export interface LogRow {
- name: UserRow['name'];
- enter_time: ListRow['enterTime'];
-  exit_time: ListRow['exitTime'];
+  name: UserRow["name"];
+  enter_time: ListRow["enterTime"];
+  exit_time: ListRow["exitTime"];
   date: Date | string;
 }
 
 export interface ScoreRow {
-  name: UserRow['name'];
+  name: UserRow["name"];
   score: number;
 }
-
 
 export type UserRow = {
   userId: number;
@@ -25,9 +22,13 @@ export type ListRow = {
 };
 
 export type nameRow = {
-  name: UserRow['name'];
+  name: UserRow["name"];
 };
 
+export type nameTimeRow = {
+  name: UserRow["name"];
+  enterTime: string;
+};
 
 export type QueueRow = {
   userId: number;

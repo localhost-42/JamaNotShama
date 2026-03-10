@@ -7,9 +7,12 @@ export interface LogRow {
 
 export type nameRow = {
   name: string;
-  enterTime: Date;
 };
 
+export type nameTimeRow = {
+  name: string;
+  enterTime: string;
+};
 
 export type ScoreRow = {
   name: string;

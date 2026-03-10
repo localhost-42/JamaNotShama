@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type { LogRow, nameRow, ScoreRow } from "../utils/types";
+import type { LogRow, nameRow, nameTimeRow, ScoreRow } from "../utils/types";
 const axiosInstance = axios.create({
   baseURL: "/api",
 });
@@ -27,7 +27,7 @@ export default {
         axiosInstance.post(`/lists/enter/${id}`, { name }),
       exitList: (id: number): Promise<AxiosResponse<void>> =>
         axiosInstance.put(`/lists/exit/${id}`),
-      getAll: (): Promise<AxiosResponse<nameRow[]>> =>
+      getAll: (): Promise<AxiosResponse<nameTimeRow[]>> =>
         axiosInstance.get(`/lists`),
     };
   },
@@ -39,7 +39,10 @@ export default {
   },
   scores() {
     return {
-      updateTopScore: (id: number, score: number): Promise<AxiosResponse<number>> =>
+      updateTopScore: (
+        id: number,
+        score: number,
+      ): Promise<AxiosResponse<number>> =>
         axiosInstance.put(`/scores/${id}`, { score }),
       getTopScores: (): Promise<AxiosResponse<ScoreRow[]>> =>
         axiosInstance.get(`/scores`),

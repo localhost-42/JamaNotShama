@@ -1,7 +1,13 @@
 import type { QueryResult } from "typeorm";
 import { pool } from "../api/DBConnection.js";
 import { AppError } from "../errors/AppError.js";
-import type { ListRow, LogRow, nameRow, UserRow } from "../util/types.js";
+import type {
+  ListRow,
+  LogRow,
+  nameRow,
+  nameTimeRow,
+  UserRow,
+} from "../util/types.js";
 import { io } from "../server.js";
 
 function isPgUniqueViolation(err: unknown): boolean {
@@ -56,10 +62,10 @@ export const exitList = async (id: number): Promise<void> => {
   }
 };
 
-export const getList = async (): Promise<nameRow[]> => {
+export const getList = async (): Promise<nameTimeRow[]> => {
   try {
-    const r = await pool.query<nameRow>(
-      "SELECT u.name, l.enter_time FROM jns.list l JOIN jns.users u ON l.user_id = u.id WHERE l.exit_time IS NULL ORDER BY l.enter_time ASC",
+    const r = await pool.query<nameTimeRow>(
+      "SELECT u.name, l.enter_time AS 'enterTime' FROM jns.list l JOIN jns.users u ON l.user_id = u.id WHERE l.exit_time IS NULL ORDER BY l.enter_time ASC",
     );
     return r.rows;
   } catch (err) {
