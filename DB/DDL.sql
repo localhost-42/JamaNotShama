@@ -18,7 +18,7 @@ CREATE TABLE jns.users(
 CREATE TABLE jns.queue(
 	id serial PRIMARY KEY,
 	user_id INTEGER NOT NULL,
-	enter_time TIMESTAMP NOT NULL DEFAULT NOW(),
+	enter_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	CONSTRAINT fk_queue_user FOREIGN KEY(user_id) REFERENCES jns.users(id) 
 		ON DELETE CASCADE
 );
@@ -26,8 +26,8 @@ CREATE TABLE jns.queue(
 CREATE TABLE jns.list(
 	id serial PRIMARY KEY,
 	user_id INTEGER NOT NULL,
-	enter_time TIMESTAMP NOT NULL DEFAULT NOW(),
-	exit_time TIMESTAMP,
+	enter_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	exit_time TIMESTAMPTZ,
 	CONSTRAINT fk_list_user FOREIGN KEY(user_id) REFERENCES jns.users(id) 
 		ON DELETE CASCADE,
 	CONSTRAINT chk_list_exit_after_enter 
