@@ -9,7 +9,7 @@ import { type Request, type Response } from "express";
 
 export const updateTopScoreHandler = async (req: Request, res: Response) => {
   try{
-   const updatedScore: number = await updateTopScore(Number(req.body.score), Number(req.params.id));
+   const updatedScore: number = await updateTopScore(Number(req.params.score), Number(req.path));
 
     res.status(200).json(updatedScore);
   } catch (err) {
