@@ -65,8 +65,15 @@ export const exitList = async (id: number): Promise<void> => {
 export const getList = async (): Promise<nameTimeRow[]> => {
   try {
     const r = await pool.query<nameTimeRow>(
-      "SELECT u.name, l.enter_time AS 'enterTime' FROM jns.list l JOIN jns.users u ON l.user_id = u.id WHERE l.exit_time IS NULL ORDER BY l.enter_time ASC",
+      `SELECT 
+      u.name,
+      l.enter_time AS "enterTime"
+      FROM jns.list l
+      JOIN jns.users u ON l.user_id = u.id
+      WHERE l.exit_time IS NULL
+      ORDER BY l.enter_time ASC`,
     );
+
     return r.rows;
   } catch (err) {
     if (isPgUniqueViolation(err)) {
