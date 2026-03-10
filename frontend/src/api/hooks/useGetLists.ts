@@ -28,7 +28,7 @@ export const useGetLists = () => {
         );
       })
       .catch((error) => {
-        alert("Error fetching queue:" + error.message);
+        alert("Error fetching list:" + error.message);
       });
   };
 
