@@ -43,7 +43,7 @@ export default {
         id: number,
         score: number,
       ): Promise<AxiosResponse<number>> =>
-        axiosInstance.put(`/scores/${id}`, { score }),
+        axiosInstance.put(`/scores/${id}`,null , {params:  {score} }),
       getTopScores: (): Promise<AxiosResponse<ScoreRow[]>> =>
         axiosInstance.get(`/scores`),
     };
