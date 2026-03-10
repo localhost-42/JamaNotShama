@@ -17,7 +17,7 @@ export const updateTopScore: (score: number, id: number ) => Promise<number> = a
         VALUES ($1, $2)
         ON CONFLICT (user_id)
         DO UPDATE SET top_score = EXCLUDED.top_score
-         RETURNING *;`, [score, id]);
+         RETURNING *;`, [id, score]);
 
          io.emit("scoreUpdated");
 
