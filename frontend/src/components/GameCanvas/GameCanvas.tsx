@@ -41,11 +41,12 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
       (finalScore) => {
         setHighScore((prev) => {
           const newHigh = Math.max(prev, finalScore);
-          localStorage.setItem(
-            "alpaca_highscore",
-            String(updateTopScore(newHigh, Number(localStorage.getItem("id")))),
-          );
-          return newHigh;
+          
+             updateTopScore(newHigh, Number(localStorage.getItem("id")))
+             .then((score) => localStorage.setItem( "alpaca_highscore", String(score)))
+             
+         
+             return newHigh;
         });
       },
     );

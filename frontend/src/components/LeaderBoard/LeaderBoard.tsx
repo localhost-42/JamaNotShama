@@ -15,7 +15,7 @@ console.log(topScores);
       </div>
 
       <ul className="list-group list-group-flush">
-        {topScores.length !== 0 ? (
+        {topScores.length === 0 ? (
           <div>
             you are the first to play
           </div>
