@@ -37,14 +37,16 @@ export const Navbar: FC = () => {
                       </li>
                     ),
                 )}
-                <NavLink
-                  to={"/login"}
-                  className={"nav-link"}
-                  style={{ textDecoration: "none" }}
-                  onClick={() => localStorage.clear()}
-                >
-                  Logout
-                </NavLink>
+                <li className="nav-item h5">
+                  <NavLink
+                    to={"/login"}
+                    className={"nav-link"}
+                    style={{ textDecoration: "none" }}
+                    onClick={() => localStorage.clear()}
+                  >
+                    Logout
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
