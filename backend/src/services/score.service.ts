@@ -34,7 +34,11 @@ export const updateTopScore: (score: number, id: number ) => Promise<number> = a
 
 export const getTopScores: () => Promise<ScoreRow[]> = async () => {
   try {
-    const r = await pool.query<ScoreRow>( 'SELECT u.name, a.top_score FROM jns.alpaca_run a JOIN jns.users u ON a.user_id = u.id ORDER BY a.top_score DESC LIMIT 10'); 
+    const r = await pool.query<ScoreRow>( 
+    `SELECT u.name, a.top_score
+     FROM jns.alpaca_run a 
+     JOIN jns.users u ON a.user_id = u.id 
+     ORDER BY a.top_score DESC LIMIT 10`); 
 
     return r.rows;
   } catch (err) {
