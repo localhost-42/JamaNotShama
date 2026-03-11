@@ -36,18 +36,30 @@ export const useExcelConverter = () => {
           { header: "זמן חזרה", key: "exit_time", width: 20 },
         ];
 
+        const formatIsraelTime = (value: string | Date) =>
+          new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Asia/Jerusalem",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date(value));
+
+        const formatIsraelDate = (value: string | Date) =>
+          new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Jerusalem",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(new Date(value));
+
         const formattedRows = result.map((row) => ({
           name: row.name,
-          date: row.date ? new Date(row.date) : "",
-          enter_time: row.enter_time ? new Date(row.enter_time) : "",
-          exit_time: row.exit_time ? new Date(row.exit_time) : "",
+          date: row.date ? formatIsraelDate(row.date) : "",
+          enter_time: row.enter_time ? formatIsraelTime(row.enter_time) : "",
+          exit_time: row.exit_time ? formatIsraelTime(row.exit_time) : "",
         }));
 
         worksheet.addRows(formattedRows);
-
-        worksheet.getColumn("enter_time").numFmt = "hh:mm";
-        worksheet.getColumn("exit_time").numFmt = "hh:mm";
-        worksheet.getColumn("date").numFmt = "yyyy-mm-dd";
 
         worksheet.getRow(1).eachCell((cell) => {
           cell.fill = {
@@ -63,7 +75,7 @@ export const useExcelConverter = () => {
         setExcelInfo(
           new Blob([buffer], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          })
+          }),
         );
       } catch (error) {
         console.error("Excel generation failed:", error);
