@@ -9,6 +9,10 @@ export const pool = new Pool({
   ssl: false,
 });
 
+pool.on("connect", (client) => {
+  client.query(`SET TIME ZONE "Asia/Jerusalem"`);
+});
+
 // export const pool = new Pool({
 //   host: "151.145.80.244",
 //   port: 5432,

@@ -32,7 +32,7 @@ export const enterList = async (id: number): Promise<void> => {
     }
 
     await pool.query<ListRow>(
-      "INSERT INTO jns.list(user_id, enter_time) VALUES ($1, NOW())",
+      "INSERT INTO jns.list(user_id, enter_time) VALUES ($1, NOW() AT TIME ZONE 'Asia/Jerusalem')",
       [id],
     );
 
@@ -48,7 +48,7 @@ export const enterList = async (id: number): Promise<void> => {
 export const exitList = async (id: number): Promise<void> => {
   try {
     await pool.query<ListRow>(
-      "UPDATE jns.list SET exit_time = NOW() WHERE user_id = $1 AND exit_time IS NULL",
+      "UPDATE jns.list SET exit_time = NOW() AT TIME ZONE 'Asia/Jerusalem' WHERE user_id = $1 AND exit_time IS NULL",
       [id],
     );
 

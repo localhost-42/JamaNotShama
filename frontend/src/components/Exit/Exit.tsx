@@ -13,6 +13,19 @@ export const Exit: FC = () => {
   const userName = localStorage.getItem("name") || "Unknown User";
   const userId = Number(localStorage.getItem("id")) || 0;
 
+  const formatTime = (dateValue: string | Date): string => {
+    const date = new Date(dateValue);
+
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const isUserOutside = peopleOutside.some(
+    (person) => person.name === userName,
+  );
+
   const availableSpots = MAX_OUTSIDE - peopleOutside.length;
 
   const canLeaveQueueNow = waitingQueue
@@ -41,7 +54,7 @@ export const Exit: FC = () => {
       .exitList(userId)
       .then(() => {
         setPeopleOutside((prevQueue) =>
-          prevQueue.filter((person) => person !== name),
+          prevQueue.filter((person) => person.name !== name),
         );
       })
       .catch((error) => {
@@ -66,7 +79,10 @@ export const Exit: FC = () => {
       .list()
       .enterList(userId, name)
       .then(() => {
-        setPeopleOutside((prevQueue) => [...prevQueue, name]);
+        setPeopleOutside((prevQueue) => [
+          ...prevQueue,
+          { name, enterTime: new Date().toISOString() },
+        ]);
       })
       .catch((error) => {
         alert("Error joining the list:" + error.message);
@@ -81,7 +97,10 @@ export const Exit: FC = () => {
       );
 
       await api.list().enterList(userId, name);
-      setPeopleOutside((prevQueue) => [...prevQueue, name]);
+      setPeopleOutside((prevQueue) => [
+        ...prevQueue,
+        { name, enterTime: new Date().toISOString() },
+      ]);
     } catch (error: unknown) {
       if (error instanceof Error) {
         alert("Error moving from queue to list: " + error.message);
@@ -91,7 +110,7 @@ export const Exit: FC = () => {
     }
   };
 
-  const handleMainBtnClick = peopleOutside.includes(userName)
+  const handleMainBtnClick = isUserOutside
     ? returnInside
     : canLeaveQueueNow
       ? changeQueue
@@ -111,7 +130,10 @@ export const Exit: FC = () => {
             people={
               Array.isArray(peopleOutside)
                 ? [
-                    ...peopleOutside,
+                    ...peopleOutside.map(
+                      ({ name, enterTime }) =>
+                        `${name}  ${formatTime(enterTime)}`,
+                    ),
                     ...Array(
                       Math.max(0, MAX_OUTSIDE - peopleOutside.length),
                     ).fill(null),
