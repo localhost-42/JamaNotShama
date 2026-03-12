@@ -1,5 +1,6 @@
-import type { FC } from "react"
+import { useEffect, type FC } from "react"
 import { formatScore } from "../../utils/formatScore"
+import { useUpdateTopScore } from "../../api/hooks/useUpdateTopScore"
 
 interface Props {
   score: number
@@ -7,6 +8,14 @@ interface Props {
 }
 
 export const ScoreBoard: FC<Props> = ({ score, highScore }) => {
+ const { updateTopScore } = useUpdateTopScore();
+
+ useEffect(() => {
+   updateTopScore(highScore, parseInt(localStorage.getItem("id") || '0'))
+   .then((score) => {localStorage.setItem("alpaca_highscore", (score || 0).toString())})
+  }, [highScore])
+          
+
   return (
     <div
       style={{
