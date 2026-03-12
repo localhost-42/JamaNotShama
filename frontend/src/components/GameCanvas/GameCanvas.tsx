@@ -25,7 +25,7 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
 
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState<number>(
-    Number(localStorage.getItem("alpaca_highscore") || 0));
+    Number(localStorage.getItem("alpaca_highscore") ) || 0);
 
   const initEngine = () => {
     const canvas = canvasRef.current;
@@ -39,9 +39,9 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
       setScore,
       (finalScore) => {
         setHighScore((prev) => {
-          const newHigh = Math.max(prev, Number(finalScore));
+          const newHigh = Math.max(prev, finalScore);
 
-          updateTopScore(newHigh, Number(localStorage.getItem("id")))
+          updateTopScore(newHigh, parseInt(localStorage.getItem("id") || '0'))
           .then((score) =>   localStorage.setItem("alpaca_highscore", String(score)))
           
           return newHigh;
