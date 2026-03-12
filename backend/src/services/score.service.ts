@@ -1,3 +1,4 @@
+import { log } from "node:console";
 import { pool } from "../api/DBConnection.js"
 import { io } from "../server.js";
 import type { ScoreRow } from "../util/types.js";
@@ -17,12 +18,13 @@ export const updateTopScore: (score: number, id: number ) => Promise<number> = a
         VALUES ($1, $2)
         ON CONFLICT (user_id)
         DO UPDATE SET top_score = EXCLUDED.top_score
-         RETURNING *;`, [id, score]);
+         RETURNING top_score;`, [id, score]);
 
          io.emit("scoreUpdated");
 
+         console.log(update.rows[0])
 
-     return update.rows[0].top_score;
+     return update.rows[0];
    
   } catch (err) {
     if (isPgUniqueViolation(err)) {
