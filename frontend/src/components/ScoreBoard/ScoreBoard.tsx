@@ -1,6 +1,6 @@
-import { useEffect, type FC } from "react"
+import { type FC } from "react"
 import { formatScore } from "../../utils/formatScore"
-import { useUpdateTopScore } from "../../api/hooks/useUpdateTopScore"
+
 
 interface Props {
   score: number
