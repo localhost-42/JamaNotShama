@@ -8,13 +8,6 @@ interface Props {
 }
 
 export const ScoreBoard: FC<Props> = ({ score, highScore }) => {
- const { updateTopScore } = useUpdateTopScore();
-
- useEffect(() => {
-   updateTopScore(highScore, parseInt(localStorage.getItem("id") || '0'))
-   .then((score) => {localStorage.setItem("alpaca_highscore", (score || 0).toString())})
-  }, [highScore])
-          
 
   return (
     <div
