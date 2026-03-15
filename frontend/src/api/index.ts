@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import type { LogRow, nameRow, nameTimeRow, ScoreRow } from "../utils/types";
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "/api",
 });
 
 export default {

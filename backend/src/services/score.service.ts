@@ -30,10 +30,7 @@ export const updateTopScore = async (
         DO UPDATE SET top_score = EXCLUDED.top_score;
         `,
         [userId, score],
-      );
-      
-      io.emit("scoreUpdated");
-   
+      );   
     }
   } catch (error) {
     const errorCode = getPgErrorCode(error);
