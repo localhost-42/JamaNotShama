@@ -19,9 +19,10 @@ export const updateTopScoreHandler = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid score query param" });
     }
 
-    const updatedScore = await updateTopScore(userId, score);
 
-    return res.status(200).json({ topScore: updatedScore });
+await updateTopScore(userId, score);
+
+    return res.status(200).send('action preformed succusffuly');
   } catch (error) {
     return res.status(500).json({
       message: error instanceof Error ? error.message : "Unknown error",
@@ -42,12 +43,9 @@ export const getTopScoresHandler = async (_req: Request, res: Response) => {
 
 export const getTopScoreByIdHandler = async (req: Request, res: Response) => {
   try {
-    const userId = Number(req.params.userId);
+    const userId = Number(req.params.id);
 
-    if (!Number.isInteger(userId)) {
-      return res.status(400).json({ message: "Invalid userId param" });
-    }
-
+  
     const topScore = await getTopScoreById(userId);
 
     if (!topScore) {

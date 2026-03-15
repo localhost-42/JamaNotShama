@@ -8,8 +8,8 @@ export const useGetTopScores = () => {
     const [topScores, setTopScores] = useState<ScoreRow[]>([]);
 
   
-        const fetchTopScores = async () => {
-                await api.scores().getTopScores()
+        const fetchTopScores = () => {
+              api.scores().getTopScores()
                 .then((response) => 
                     setTopScores( response.data ? response.data  : []))
                 .catch((error) => {
