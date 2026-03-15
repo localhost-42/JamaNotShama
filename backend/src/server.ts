@@ -7,7 +7,7 @@ import loginRouter from "./routers/login.route.js";
 import queueRouter from "./routers/queue.routes.js";
 import scoreRouter from "./routers/score.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
-
+import cors from "cors";
 const app = express();
 const port = process.env.APP_PORT || 3000;
 
@@ -18,6 +18,8 @@ export const io = new Server(server, {
     origin: "*",
   },
 });
+
+app.use(cors())
 
 app.use(express.json());
 app.use('/api/scores', scoreRouter);
