@@ -7,7 +7,7 @@ export interface LogRow {
 
 export interface ScoreRow {
   name: UserRow["name"];
-  score: number;
+  top_score: number;
 }
 
 

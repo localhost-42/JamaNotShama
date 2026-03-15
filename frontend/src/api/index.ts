@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import type { LogRow, nameRow, nameTimeRow, ScoreRow } from "../utils/types";
 const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:3000/api",
 });
 
 export default {
@@ -47,7 +47,7 @@ export default {
         getTopScoreById: (
         id: number,
       ): Promise<AxiosResponse<ScoreRow>> =>
-        axiosInstance.put(`/scores/${id}`),
+        axiosInstance.get(`/scores/${id}`),
       getTopScores: (): Promise<AxiosResponse<ScoreRow[]>> =>
         axiosInstance.get(`/scores`),
     };

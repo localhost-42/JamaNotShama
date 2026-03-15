@@ -13,30 +13,28 @@ function getPgErrorCode(error: unknown): string | undefined {
 export const updateTopScore = async (
   userId: number,
   score: number,
-): Promise<number> => {
-  if (!Number.isInteger(userId)) {
-    throw new Error(`Invalid userId: ${userId}`);
-  }
+): Promise<void> => {
 
-  if (!Number.isInteger(score)) {
-    throw new Error(`Invalid score: ${score}`);
-  }
 
   try {
-    const result = await pool.query<{ top_score: number }>(
-      `
-      INSERT INTO jns.alpaca_run (user_id, top_score)
-      VALUES ($1, $2)
-      ON CONFLICT (user_id)
-      DO UPDATE SET top_score = EXCLUDED.top_score
-      RETURNING top_score;
-      `,
-      [userId, score],
-    );
+    const prevTopScore = await getTopScoreById(userId)
 
-    io.emit("scoreUpdated");
+    if(prevTopScore?.top_score &&  prevTopScore?.top_score > score) {
 
-    return result.rows[0].top_score;
+    } else {
+       await pool.query(
+        `
+        INSERT INTO jns.alpaca_run (user_id, top_score)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET top_score = EXCLUDED.top_score;
+        `,
+        [userId, score],
+      );
+      
+      io.emit("scoreUpdated");
+   
+    }
   } catch (error) {
     const errorCode = getPgErrorCode(error);
 

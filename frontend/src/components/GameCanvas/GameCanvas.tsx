@@ -29,7 +29,7 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
   const [highScore, setHighScore] = useState<number>(0);
 
   useEffect(() => {
-    topScore.fetchTopScore().then((val) => setHighScore(val?.score || 0))
+    topScore.fetchTopScore().then((val) => setHighScore((highScore) => val?.top_score || highScore ))
   },[]);
 
 useEffect(() => {
