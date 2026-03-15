@@ -13,7 +13,7 @@ export const useGetTopScores = () => {
                 .then((response) => 
                     setTopScores( response.data ? response.data  : []))
                 .catch((error) => {
-                    alert("Error fetching waiting queue: " + error.message);
+                    alert("Error fetching to scores " + error.message);
       }); 
 
     }

@@ -34,6 +34,23 @@ export const updateTopScore: (score: number, id: number ) => Promise<number> = a
   }
 }
 
+export const getTopScoreById: (id: number) => Promise<ScoreRow> = async (id: number) => {
+   try {
+    const r = await pool.query( 
+    `SELECT u.name, a.top_score
+     FROM jns.alpaca_run a 
+     INNER JOIN jns.users u ON a.user_id = u.id
+     WHERE a.user_id = $1`,[id]); 
+
+    return r.rows[0];
+  } catch (err) {
+    if (isPgUniqueViolation(err)) {
+      return [];
+    }       
+    throw err;  
+ }
+}
+
 export const getTopScores: () => Promise<ScoreRow[]> = async () => {
   try {
     const r = await pool.query<ScoreRow>( 

@@ -10,6 +10,9 @@ export interface ScoreRow {
   score: number;
 }
 
+
+
+
 export type UserRow = {
   userId: number;
   name: string;
