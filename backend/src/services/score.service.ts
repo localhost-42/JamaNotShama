@@ -1,69 +1,85 @@
-import { log } from "node:console";
-import { pool } from "../api/DBConnection.js"
+import { pool } from "../api/DBConnection.js";
 import { io } from "../server.js";
 import type { ScoreRow } from "../util/types.js";
 
-function isPgUniqueViolation(err: unknown): boolean {
-  // pg error code for unique_violation
-  return (
-    typeof err === "object" && err !== null && (err as any).code === "23505"
-  );
-}
-
-
-export const updateTopScore: (score: number, id: number ) => Promise<number> = async (score: number, id: number) => {
-  try {
-   const update = await pool.query(
-        `INSERT INTO jns.alpaca_run (user_id, top_score)
-        VALUES ($1, $2)
-        ON CONFLICT (user_id)
-        DO UPDATE SET top_score = EXCLUDED.top_score
-         RETURNING top_score;`, [id, score]);
-
-         io.emit("scoreUpdated");
-
-         console.log(update.rows[0])
-
-     return update.rows[0];
-   
-  } catch (err) {
-    if (isPgUniqueViolation(err)) {
-      throw new Error("User not found");
-    }   
-    throw err;
+function getPgErrorCode(error: unknown): string | undefined {
+  if (typeof error === "object" && error !== null && "code" in error) {
+    return String((error as { code: unknown }).code);
   }
+
+  return undefined;
 }
 
-export const getTopScoreById: (id: number) => Promise<ScoreRow> = async (id: number) => {
-   try {
-    const r = await pool.query( 
-    `SELECT u.name, a.top_score
-     FROM jns.alpaca_run a 
-     INNER JOIN jns.users u ON a.user_id = u.id
-     WHERE a.user_id = $1`,[id]); 
+export const updateTopScore = async (
+  userId: number,
+  score: number,
+): Promise<number> => {
+  if (!Number.isInteger(userId)) {
+    throw new Error(`Invalid userId: ${userId}`);
+  }
 
-    return r.rows[0];
-  } catch (err) {
-    if (isPgUniqueViolation(err)) {
-      return [];
-    }       
-    throw err;  
- }
-}
+  if (!Number.isInteger(score)) {
+    throw new Error(`Invalid score: ${score}`);
+  }
 
-export const getTopScores: () => Promise<ScoreRow[]> = async () => {
   try {
-    const r = await pool.query<ScoreRow>( 
-    `SELECT u.name, a.top_score
-     FROM jns.alpaca_run a 
-     JOIN jns.users u ON a.user_id = u.id 
-     ORDER BY a.top_score DESC LIMIT 10`); 
+    const result = await pool.query<{ top_score: number }>(
+      `
+      INSERT INTO jns.alpaca_run (user_id, top_score)
+      VALUES ($1, $2)
+      ON CONFLICT (user_id)
+      DO UPDATE SET top_score = EXCLUDED.top_score
+      RETURNING top_score;
+      `,
+      [userId, score],
+    );
 
-    return r.rows;
-  } catch (err) {
-    if (isPgUniqueViolation(err)) {
-      return [];
-    }       
-    throw err;  
- }
-}
+    io.emit("scoreUpdated");
+
+    return result.rows[0].top_score;
+  } catch (error) {
+    const errorCode = getPgErrorCode(error);
+
+    if (errorCode === "23503") {
+      throw new Error("User not found");
+    }
+
+    if (errorCode === "22P02") {
+      throw new Error("Invalid integer value sent to database");
+    }
+
+    throw error;
+  }
+};
+
+export const getTopScoreById = async (userId: number): Promise<ScoreRow | null> => {
+  if (!Number.isInteger(userId)) {
+    throw new Error(`Invalid userId: ${userId}`);
+  }
+
+  const result = await pool.query<ScoreRow>(
+    `
+    SELECT u.name, a.top_score
+    FROM jns.alpaca_run a
+    INNER JOIN jns.users u ON a.user_id = u.id
+    WHERE a.user_id = $1
+    `,
+    [userId],
+  );
+
+  return result.rows[0] ?? null;
+};
+
+export const getTopScores = async (): Promise<ScoreRow[]> => {
+  const result = await pool.query<ScoreRow>(
+    `
+    SELECT u.name, a.top_score
+    FROM jns.alpaca_run a
+    JOIN jns.users u ON a.user_id = u.id
+    ORDER BY a.top_score DESC
+    LIMIT 10
+    `,
+  );
+
+  return result.rows;
+};
