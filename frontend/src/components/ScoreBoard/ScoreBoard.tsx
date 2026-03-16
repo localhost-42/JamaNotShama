@@ -1,5 +1,6 @@
-import type { FC } from "react"
+import { type FC } from "react"
 import { formatScore } from "../../utils/formatScore"
+
 
 interface Props {
   score: number
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export const ScoreBoard: FC<Props> = ({ score, highScore }) => {
+
   return (
     <div
       style={{

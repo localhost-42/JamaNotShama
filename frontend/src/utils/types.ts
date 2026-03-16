@@ -16,5 +16,5 @@ export type nameTimeRow = {
 
 export type ScoreRow = {
   name: string;
-  score: number;
+  top_score: number;
 };
