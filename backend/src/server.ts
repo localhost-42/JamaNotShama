@@ -19,6 +19,7 @@ export const io = new Server(server, {
   },
 });
 
+
 app.use(express.json());
 app.use('/api/scores', scoreRouter);
 app.use("/api/lists", listRouter);

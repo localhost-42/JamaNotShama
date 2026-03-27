@@ -9,6 +9,7 @@ import { GameEngine } from "../../engine/GameEngine";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { ScoreBoard } from "../ScoreBoard";
 import type { KeyState } from "../../types/game";
+import { useGetTopScoresById } from "../../api/hooks/useGetScoreById";
 import { useUpdateTopScore } from "../../api/hooks/useUpdateTopScore";
 
 export interface GameHandle {
@@ -21,11 +22,20 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<GameEngine | undefined>(undefined);
   const keys = useKeyboard();
-  const { updateTopScore } = useUpdateTopScore();
+  const topScore = useGetTopScoresById(Number(localStorage.getItem('id')))
+ const { updateTopScore } = useUpdateTopScore(Number(localStorage.getItem('id')))
 
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState<number>(
-    Number(localStorage.getItem("alpaca_highscore") || 0));
+  const [highScore, setHighScore] = useState<number>(0);
+
+  useEffect(() => {
+    topScore.fetchTopScore().then((val) => setHighScore((highScore) => val?.top_score || highScore ))
+  },[]);
+
+useEffect(() => {
+  updateTopScore(highScore);
+}, [highScore])
+
 
   const initEngine = () => {
     const canvas = canvasRef.current;
@@ -39,11 +49,8 @@ export const GameCanvas = forwardRef<GameHandle>((_, ref) => {
       setScore,
       (finalScore) => {
         setHighScore((prev) => {
-          const newHigh = Math.max(prev, Number(finalScore));
-
-          updateTopScore(newHigh, Number(localStorage.getItem("id")))
-          .then((score) =>   localStorage.setItem("alpaca_highscore", String(score)))
-          
+          const newHigh = Math.max(prev, finalScore);
+         
           return newHigh;
         });
         

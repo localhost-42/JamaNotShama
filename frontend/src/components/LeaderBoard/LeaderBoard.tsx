@@ -1,11 +1,10 @@
 import { useGetTopScores } from "../../api/hooks/useGetTopScores"
+import { formatScore } from "../../utils/formatScore";
 
 
 export const LeaderBoard = () => {
   const { topScores } = useGetTopScores() 
 
-
-console.log(topScores);
 
 
   return (
@@ -20,6 +19,7 @@ console.log(topScores);
             you are the first to play
           </div>
         ) : topScores.map((userScore, index) => (
+          
           <li
             className="list-group-item d-flex justify-content-between align-items-center"
           >
@@ -28,9 +28,9 @@ console.log(topScores);
               <span>{userScore.name}</span>
             </div>
 
-            <span className={`badge bg-${index < 2 ? "success" : "secondary" } rounded-pill`}>
-              {userScore.score}
-            </span>
+            <div className={`badge bg-${index < 2 ? "success" : "secondary" } rounded-pill`}>
+              {formatScore(userScore.top_score)}
+            </div>
           </li>
         ))}
       </ul>
