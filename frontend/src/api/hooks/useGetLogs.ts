@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "..";
 import type { LogRow } from "../../utils/types";
 
-export const useGetLogs = (peopleOutside: string[]) => {
+export const useGetLogs = () => {
   const [logs, setLogs] = useState<LogRow[]>([]);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const useGetLogs = (peopleOutside: string[]) => {
     };
 
     fetchLogs();
-  }, [peopleOutside]);
+  }, []);
 
   return { logs };
 };
