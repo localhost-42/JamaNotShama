@@ -1,10 +1,9 @@
 import { useState, type FC } from "react";
-import { useGetLists, useGetLogs } from "../../api/hooks";
+import {  useGetLogs } from "../../api/hooks";
 import type { LogRow } from "../../utils/types";
 
 export const Statistics: FC = () => {
-  const { peopleOutside } = useGetLists();
-  const { logs } = useGetLogs(peopleOutside.map((person) => person.name));
+  const { logs } = useGetLogs();
 
   const [openDay, setOpenDay] = useState<string | null>(null);
 
