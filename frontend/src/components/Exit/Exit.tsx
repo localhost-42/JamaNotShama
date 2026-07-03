@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { useEffect, type FC } from "react";
 import api from "../../api";
 import { useGetLists, useGetQueue } from "../../api/hooks";
 import { EnterQueueBtn } from "../EnterQueueButton/index";
@@ -32,22 +32,38 @@ export const Exit: FC = () => {
     .slice(0, availableSpots)
     .includes(userName);
 
-  const isDisabled = waitingQueue.includes(userName) && !canLeaveQueueNow;
-
-  const leaveWaitingQueue = (name: string, userId: number) => {
-    api
+    
+    const isDisabled = waitingQueue.includes(userName) && !canLeaveQueueNow;
+    
+    const leaveWaitingQueue = (name: string, userId: number) => {
+      api
       .queue()
       .exitQueue(userId)
       .then(() => {
         setWaitingQueue((prevQueue) =>
           prevQueue.filter((person) => person !== name),
-        );
-      })
-      .catch((error) => {
-        alert("Error leaving the queue:" + error.message);
-      });
+      );
+    })
+    .catch((error) => {
+      alert("Error leaving the queue:" + error.message);
+    });
   };
-
+  
+    useEffect(() => {
+      if (canLeaveQueueNow) {
+        alert("It's your turn to go outside!");
+  
+        const timer = setTimeout(
+          () => {
+            leaveWaitingQueue(userName, userId);
+          },
+          5 * 60 * 1000,
+        );
+  
+        return () => clearTimeout(timer);
+      }
+    }, [canLeaveQueueNow]);
+  
   const returnInside = (name: string, userId: number) => {
     api
       .list()
