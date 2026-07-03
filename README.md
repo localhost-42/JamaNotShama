@@ -1,0 +1,1 @@
+A course management system that includes several tools, such as managing student exits from the classroom or schedules. This is a full-stack and scalable system that was developed in a very short time to help my course during emergencies, when we had to study from home.
